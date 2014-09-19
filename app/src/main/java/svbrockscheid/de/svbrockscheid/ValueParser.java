@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
  */
 public class ValueParser {
 
-    private static final Pattern resultPattern = Pattern.compile("\\$([a-zA-Z0-9]+) = '(.+)'");
+    private static final Pattern resultPattern = Pattern.compile("\\$([a-zA-Z0-9]+)='([-a-zA-Z0-9\\.: \\(\\)]+)'");
 
     public static Map<String, String> parse(String ergebnissDatei) {
         HashMap<String, String> ergebnisse = new HashMap<String, String>();
         Matcher ergebnisMatcher = resultPattern.matcher(ergebnissDatei);
         while (ergebnisMatcher.find()) {
-            ergebnisse.put(ergebnisMatcher.group(0), ergebnisMatcher.group(1));
+            ergebnisse.put(ergebnisMatcher.group(1), ergebnisMatcher.group(2));
         }
         return ergebnisse;
     }

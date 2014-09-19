@@ -4,5 +4,11 @@
     <string name="app_name">SV Brockscheid</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_liga">Kreisliga D</string>
+    <string name="sv_brockscheid">SV Brockscheid</string>
+    <string name="position">%1$s %2$s</string>
+    <string name="naechstes_spiel">Nächstes Spiel</string>
+    <string name="letztes_spiel">Letztes Spiel</string>
 
 </resources>
