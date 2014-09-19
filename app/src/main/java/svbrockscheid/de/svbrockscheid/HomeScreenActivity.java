@@ -1,16 +1,16 @@
 package svbrockscheid.de.svbrockscheid;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
+import java.util.Map;
 
 
 public class HomeScreenActivity extends Activity {
@@ -26,6 +26,18 @@ public class HomeScreenActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new AsyncTask<String, Map<String, String>, Void>() {
+
+            @Override
+            protected Void doInBackground(String... params) {
+
+                return null;
+            }
+        }.execute("ergebnis.php");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
