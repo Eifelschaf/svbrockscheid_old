@@ -12,7 +12,7 @@ public class HomeScreenActivity extends Activity {
         setContentView(R.layout.activity_home_screen);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new TestFragment())
+                    .add(R.id.container, new ÜbersichtsFragment())
                     .commit();
         }
     }

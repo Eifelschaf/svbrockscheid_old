@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="svbrockscheid.de.svbrockscheid.TestFragment">
+    android:padding="10dp"
+    tools:context="svbrockscheid.de.svbrockscheid.ÜbersichtsFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -10,6 +11,8 @@
         android:id="@+id/ligaTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
         android:text="@string/title_liga"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -17,32 +20,60 @@
         android:id="@+id/posVor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/ligaTitle"
+        android:layout_toLeftOf="@+id/punkteVor"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/punkteVor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/posVor"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/posVor"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/sv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/posVor"
-        android:text="@string/sv_brockscheid"
+        android:layout_toLeftOf="@+id/punkteBrockscheid"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/punkteBrockscheid"
-        android:layout_width="45dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/sv"
-        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/sv"
-        android:layout_toRightOf="@+id/sv"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/posNach"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/sv"
+        android:layout_toLeftOf="@+id/punkteNach"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/punkteNach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/posNach"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/posNach"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -50,6 +81,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/posNach"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
         android:text="@string/naechstes_spiel"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -73,6 +106,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/naechsteInfos"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
         android:text="@string/letztes_spiel"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

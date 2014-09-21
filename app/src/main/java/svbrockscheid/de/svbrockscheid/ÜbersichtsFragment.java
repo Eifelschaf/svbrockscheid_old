@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class TestFragment extends Fragment {
+public class ÜbersichtsFragment extends Fragment {
 
     //brockscheider infos
     private static final String POSITION = "posbro";
@@ -39,7 +39,7 @@ public class TestFragment extends Fragment {
     private static final String LETZTES_ERGEBNIS = "erg";
     private static final String LETZTER_ORT = "ort2";
 
-    public TestFragment() {
+    public ÜbersichtsFragment() {
         // Required empty public constructor
     }
 
@@ -91,12 +91,32 @@ public class TestFragment extends Fragment {
                         punkteBrockscheid.setText(values.get(PUNKTE));
                     }
                     if (values.containsKey(POSITION_VOR) && values.containsKey(MANNSCHAFT_VOR)) {
+                        view1.findViewById(R.id.posVor).setVisibility(View.VISIBLE);
+                        view1.findViewById(R.id.punkteVor).setVisibility(View.VISIBLE);
                         TextView posVor = (TextView) view1.findViewById(R.id.posVor);
                         posVor.setText(getString(R.string.position, values.get(POSITION_VOR), values.get(MANNSCHAFT_VOR)));
+                        if (values.containsKey(PUNKTE_VOR)) {
+                            TextView punkteVor = (TextView) view1.findViewById(R.id.punkteVor);
+                            punkteVor.setText(values.get(PUNKTE_VOR));
+                        }
+                    } else {
+                        //hurra, wir sind erster!
+                        view1.findViewById(R.id.posVor).setVisibility(View.GONE);
+                        view1.findViewById(R.id.punkteVor).setVisibility(View.GONE);
                     }
                     if (values.containsKey(POSITION_NACH) && values.containsKey(MANNSCHAFT_NACH)) {
+                        view1.findViewById(R.id.posNach).setVisibility(View.VISIBLE);
+                        view1.findViewById(R.id.punkteNach).setVisibility(View.VISIBLE);
                         TextView posNach = (TextView) view1.findViewById(R.id.posNach);
                         posNach.setText(getString(R.string.position, values.get(POSITION_NACH), values.get(MANNSCHAFT_NACH)));
+                        if (values.containsKey(PUNKTE_NACH)) {
+                            TextView punkteNach = (TextView) view1.findViewById(R.id.punkteNach);
+                            punkteNach.setText(values.get(PUNKTE_NACH));
+                        }
+                    } else {
+                        //traurig, aber wir sind doch tatsächlich letzter...
+                        view1.findViewById(R.id.posNach).setVisibility(View.GONE);
+                        view1.findViewById(R.id.punkteNach).setVisibility(View.GONE);
                     }
                     if (values.containsKey(NAECHSTE_MANNSCHAFT)) {
                         TextView naechsteMannschaft = (TextView) view1.findViewById(R.id.naechsteMannschaft);
