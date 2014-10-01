@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid;
+package de.svbrockscheid;
 
 import java.util.HashMap;
 import java.util.Map;

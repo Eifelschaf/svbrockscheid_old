@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid;
+package de.svbrockscheid;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

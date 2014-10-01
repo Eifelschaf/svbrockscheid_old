@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid.model;
+package de.svbrockscheid.model;
 
 import java.util.Date;
 
@@ -15,6 +15,11 @@ public class InfoNachricht {
     }
 
     public String getNachricht() {
+        return nachricht;
+    }
+
+    @Override
+    public String toString() {
         return nachricht;
     }
 }

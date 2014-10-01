@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid.fragments;
+package de.svbrockscheid.fragments;
 
 
 import android.app.ActionBar;
@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import svbrockscheid.de.svbrockscheid.R;
+import de.svbrockscheid.R;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -190,7 +190,7 @@ public class MenuFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);

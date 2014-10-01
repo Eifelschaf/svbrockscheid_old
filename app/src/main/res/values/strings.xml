@@ -20,5 +20,6 @@
     <string name="menu_spielplan">Spielplan</string>
     <string name="menu_uebersicht">Übersicht</string>
     <string name="menu_infos">Infos</string>
+    <string name="neue_nachrichten">Neue Nachrichten Verfügbar</string>
 
 </resources>

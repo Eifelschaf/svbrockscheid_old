@@ -1,10 +1,11 @@
-package svbrockscheid.de.svbrockscheid.fragments;
+package de.svbrockscheid.fragments;
 
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
-import svbrockscheid.de.svbrockscheid.model.InfoNachricht;
+import de.svbrockscheid.APIClient;
+import de.svbrockscheid.model.InfoNachricht;
 
 /**
  * A fragment representing a list of Items.
@@ -25,6 +26,6 @@ public class InfoFragment extends ListFragment {
 
         // TODO: Change Adapter to display your content
         setListAdapter(new ArrayAdapter<InfoNachricht>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, new InfoNachricht[0]));
+                android.R.layout.simple_list_item_1, android.R.id.text1, APIClient.getNachrichten()));
     }
 }

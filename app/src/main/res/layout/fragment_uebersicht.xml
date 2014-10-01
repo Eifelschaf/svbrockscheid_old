@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context="svbrockscheid.de.svbrockscheid.fragments.UebersichtsFragment">
+    tools:context="de.svbrockscheid.fragments.UebersichtsFragment">
 
-<!-- TODO: Update blank fragment layout -->
+    <!-- TODO: Update blank fragment layout -->
 
     <TextView
         android:id="@+id/ligaTitle"

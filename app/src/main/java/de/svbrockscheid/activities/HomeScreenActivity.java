@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid.activities;
+package de.svbrockscheid.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -6,38 +6,34 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
-import svbrockscheid.de.svbrockscheid.R;
-import svbrockscheid.de.svbrockscheid.fragments.InfoFragment;
-import svbrockscheid.de.svbrockscheid.fragments.MenuFragment;
-import svbrockscheid.de.svbrockscheid.fragments.SpielplanFragment;
-import svbrockscheid.de.svbrockscheid.fragments.UebersichtsFragment;
+import de.svbrockscheid.APIClient;
+import de.svbrockscheid.R;
+import de.svbrockscheid.fragments.InfoFragment;
+import de.svbrockscheid.fragments.MenuFragment;
+import de.svbrockscheid.fragments.SpielplanFragment;
+import de.svbrockscheid.fragments.UebersichtsFragment;
 
 public class HomeScreenActivity extends Activity
         implements MenuFragment.NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private MenuFragment mMenuFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
+    public static final String NEUE_NACHRICHTEN = "neueNachrichten";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
-        mMenuFragment = (MenuFragment)
+        MenuFragment mMenuFragment = (MenuFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
 
         // Set up the drawer.
         mMenuFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        APIClient.registerCGM(this);
+        if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean(NEUE_NACHRICHTEN)) {
+            //die Nachrichten auswählen
+            mMenuFragment.selectItem(MenuFragment.INFO_POSITION);
+        }
     }
 
     @Override
