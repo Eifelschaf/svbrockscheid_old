@@ -1,4 +1,4 @@
-package svbrockscheid.de.svbrockscheid;
+package svbrockscheid.de.svbrockscheid.fragments;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -16,8 +16,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import svbrockscheid.de.svbrockscheid.R;
+import svbrockscheid.de.svbrockscheid.ValueParser;
 
-public class ÜbersichtsFragment extends Fragment {
+
+public class UebersichtsFragment extends Fragment {
 
     //brockscheider infos
     private static final String POSITION = "posbro";
@@ -39,7 +42,7 @@ public class ÜbersichtsFragment extends Fragment {
     private static final String LETZTES_ERGEBNIS = "erg";
     private static final String LETZTER_ORT = "ort2";
 
-    public ÜbersichtsFragment() {
+    public UebersichtsFragment() {
         // Required empty public constructor
     }
 
