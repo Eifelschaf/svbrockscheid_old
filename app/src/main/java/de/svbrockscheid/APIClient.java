@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.svbrockscheid.model.InfoNachricht;
+import de.svbrockscheid.model.LigaSpiel;
 
 /**
  * Created by Matthias on 01.10.2014.
@@ -50,31 +51,42 @@ public class APIClient {
     public static Map<String, String> getUebersicht() {
         Map<String, String> returnValues = new HashMap<String, String>();
         //falls mal mehr Dateien ausgelesen werden müssen
-        for (String param : new String[]{"app.php"}) {
-            try {
-                BufferedReader instream = new BufferedReader(new InputStreamReader(new URL("http://www.svbrockscheid.de/svbapp/" + param).openConnection().getInputStream()));
-                StringBuilder builder = new StringBuilder();
-                String line;
-                while ((line = instream.readLine()) != null) {
-                    builder.append(line);
-                }
-                //den stringbuilder parsen
-                returnValues.putAll(ValueParser.parse(builder.toString()));
-            } catch (FileNotFoundException e) {
-                Log.e(TAG, "FileNotFoundException", e);
-            } catch (IOException e) {
-                Log.e(TAG, "IOException", e);
-            }
+        for (String param : new String[]{"http://www.svbrockscheid.de/svbapp/app.php"}) {
+            returnValues.putAll(ValueParser.parse(getFileContent(param)));
         }
         return returnValues;
     }
 
+    public static LigaSpiel[] getLigaSpiele(String fileName) {
+        String fileContent = getFileContent("http://www.svbrockscheid.de/" + fileName);
+        return GSON.fromJson(fileContent, LigaSpiel[].class);
+    }
+
+    private static String getFileContent(String fileName) {
+        try {
+            BufferedReader instream = new BufferedReader(new InputStreamReader(new URL(fileName).openConnection().getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = instream.readLine()) != null) {
+                builder.append(line);
+            }
+            //den stringbuilder parsen
+            return builder.toString();
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "FileNotFoundException", e);
+        } catch (IOException e) {
+            Log.e(TAG, "IOException", e);
+        }
+        return "";
+    }
+
+    /**
+     * Alle Nachrichten vom Server laden
+     *
+     * @return Alle Nachrichten, fertig geparsed.
+     */
     public static InfoNachricht[] getNachrichten() {
-        return GSON.fromJson("[" +
-                "{\"nachricht\":\"Nachricht 1\",\"zeit\":\"2014-11-22 13:37\"}," +
-                "{\"nachricht\":\"Nachricht 2\",\"zeit\":\"2014-11-22 13:37\"}," +
-                "{\"nachricht\":\"Nachricht 3\",\"zeit\":\"2014-11-22 13:37\"}" +
-                "]", InfoNachricht[].class);
+        return GSON.fromJson(getFileContent("http://www.svbrockscheid.de/svbapp/nachrichten.json"), InfoNachricht[].class);
     }
 
     public static boolean registerCGM(Activity activity) {

@@ -21,5 +21,13 @@
     <string name="menu_uebersicht">Übersicht</string>
     <string name="menu_infos">Infos</string>
     <string name="neue_nachrichten">Neue Nachrichten Verfügbar</string>
+    <string name="datum">Datum</string>
+    <string name="zeit">Zeit</string>
+    <string name="ort">Ort</string>
+    <string name="paarung">Paarung</string>
+    <string name="ergebnis">Erg</string>
+    <string name="kreispokal">Bitburger Kreispokal</string>
+    <string name="kreisliga">Kreisliga D</string>
+    <string name="winterpause">Winterpause</string>
 
 </resources>
