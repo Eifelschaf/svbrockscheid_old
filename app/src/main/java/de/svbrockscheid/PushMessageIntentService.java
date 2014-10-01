@@ -68,7 +68,7 @@ public class PushMessageIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_notification)
+                        .setSmallIcon(R.drawable.noticon)
                         .setContentTitle(getString(R.string.neue_nachrichten));
 
         mBuilder.setContentIntent(contentIntent);
