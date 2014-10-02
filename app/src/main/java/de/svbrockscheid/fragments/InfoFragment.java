@@ -1,5 +1,6 @@
 package de.svbrockscheid.fragments;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,11 @@ public class InfoFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
         new AsyncTask<Void, Void, InfoNachricht[]>() {
             @Override
             protected InfoNachricht[] doInBackground(Void... params) {
@@ -41,7 +47,7 @@ public class InfoFragment extends ListFragment {
             @Override
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
-                setListAdapter(new ArrayAdapter<InfoNachricht>(getActivity(),
+                setListAdapter(new ArrayAdapter<InfoNachricht>(activity,
                         R.layout.list_item_nachrichten, android.R.id.text1, results));
             }
         }.execute();

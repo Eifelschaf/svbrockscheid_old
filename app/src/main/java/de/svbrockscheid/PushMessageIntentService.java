@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -16,12 +17,11 @@ import de.svbrockscheid.activities.HomeScreenActivity;
  * Created by Matthias on 01.10.2014.
  */
 public class PushMessageIntentService extends IntentService {
-    public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID_NEUE_NACHRICHTEN = 1;
     private static final String NEUE_NACHRICHTEN = "neueNachrichten";
     private static final String TYPE_PROPERTY = "type";
     private static final String TAG = "PushMessageIntentService";
     NotificationCompat.Builder builder;
-    private NotificationManager mNotificationManager;
 
     public PushMessageIntentService() {
         super("PushMessageIntentService");
@@ -58,21 +58,24 @@ public class PushMessageIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotificationForNewMessages() {
-        mNotificationManager = (NotificationManager)
+        NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent intent = new Intent(this, HomeScreenActivity.class);
-        intent.putExtra(HomeScreenActivity.NEUE_NACHRICHTEN, true);
+        Intent intent = new Intent(HomeScreenActivity.NEUE_NACHRICHTEN);
+        intent.putExtra(HomeScreenActivity.NEUE_NACHRICHTEN, 1);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.noticon)
-                        .setContentTitle(getString(R.string.neue_nachrichten));
+                        .setContentTitle(getString(R.string.neuigkeiten))
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                        .setVibrate(new long[]{300, 300, 300, 300})
+                        .setContentText(getString(R.string.neue_nachrichten));
 
         mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID_NEUE_NACHRICHTEN, mBuilder.build());
     }
 
 }
