@@ -1,13 +1,13 @@
 package de.svbrockscheid.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.PushMessageIntentService;
@@ -17,7 +17,7 @@ import de.svbrockscheid.fragments.MenuFragment;
 import de.svbrockscheid.fragments.SpielplanFragment;
 import de.svbrockscheid.fragments.UebersichtsFragment;
 
-public class HomeScreenActivity extends Activity
+public class HomeScreenActivity extends ActionBarActivity
         implements MenuFragment.NavigationDrawerCallbacks {
 
     public static final String NEUE_NACHRICHTEN = "de.svbrockscheid.NEUE_NACHRICHTEN";
@@ -30,7 +30,7 @@ public class HomeScreenActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         MenuFragment mMenuFragment = (MenuFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mMenuFragment.setUp(
@@ -44,7 +44,7 @@ public class HomeScreenActivity extends Activity
         super.onNewIntent(intent);
         if (NEUE_NACHRICHTEN.equals(intent.getAction())) {
             //die Nachrichten auswählen
-            ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).selectItem(MenuFragment.INFO_POSITION);
+            ((MenuFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer)).selectItem(MenuFragment.INFO_POSITION);
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (notificationManager != null) {
                 //notification entfernen
@@ -56,7 +56,7 @@ public class HomeScreenActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment selectedFragment;
         String backstackName;
         switch (position) {
