@@ -47,8 +47,10 @@ public class InfoFragment extends ListFragment {
             @Override
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
-                setListAdapter(new ArrayAdapter<InfoNachricht>(activity,
-                        R.layout.list_item_nachrichten, android.R.id.text1, results));
+                if (results != null) {
+                    setListAdapter(new ArrayAdapter<>(activity,
+                            R.layout.list_item_nachrichten, android.R.id.text1, results));
+                }
             }
         }.execute();
     }

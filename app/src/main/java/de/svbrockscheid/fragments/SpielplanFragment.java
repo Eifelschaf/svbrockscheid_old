@@ -41,12 +41,14 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                View view1 = getView();
-                if (view1 != null) {
-                    LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreispokal);
-                    if (table != null) {
-                        table.removeAllViews();
-                        setupLine(ligaSpiele, table);
+                if (ligaSpiele != null) {
+                    View view1 = getView();
+                    if (view1 != null) {
+                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreispokal);
+                        if (table != null) {
+                            table.removeAllViews();
+                            setupLine(ligaSpiele, table);
+                        }
                     }
                 }
             }
@@ -60,12 +62,14 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                View view1 = getView();
-                if (view1 != null) {
-                    LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga);
-                    if (table != null) {
-                        table.removeAllViews();
-                        setupLine(ligaSpiele, table);
+                if (ligaSpiele != null) {
+                    View view1 = getView();
+                    if (view1 != null) {
+                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga);
+                        if (table != null) {
+                            table.removeAllViews();
+                            setupLine(ligaSpiele, table);
+                        }
                     }
                 }
             }
@@ -79,12 +83,14 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                View view1 = getView();
-                if (view1 != null) {
-                    LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga2);
-                    if (table != null) {
-                        table.removeAllViews();
-                        setupLine(ligaSpiele, table);
+                if (ligaSpiele != null) {
+                    View view1 = getView();
+                    if (view1 != null) {
+                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga2);
+                        if (table != null) {
+                            table.removeAllViews();
+                            setupLine(ligaSpiele, table);
+                        }
                     }
                 }
             }
