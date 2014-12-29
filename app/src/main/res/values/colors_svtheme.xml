@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="svtheme_color">#020a52</color>
-    <color name="svtheme_color_dark">#ff01052f</color>
-    <color name="svtheme_color_accent">#ffa56f07</color>
+    <color name="svtheme_color">#3F51B5</color>
+    <color name="svtheme_color_dark">#303F9F</color>
+    <color name="svtheme_color_accent">#FF9800</color>
     <color name="cardBackground">#ff414141</color>
 </resources>
