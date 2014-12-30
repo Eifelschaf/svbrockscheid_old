@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.R;
 import de.svbrockscheid.model.InfoNachricht;
@@ -48,8 +51,15 @@ public class InfoFragment extends ListFragment {
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
                 if (results != null) {
+                    //nullwerte entfernen
+                    List<InfoNachricht> infos = new ArrayList<>();
+                    for (InfoNachricht nachricht : results) {
+                        if (nachricht != null) {
+                            infos.add(nachricht);
+                        }
+                    }
                     setListAdapter(new ArrayAdapter<>(activity,
-                            R.layout.list_item_nachrichten, android.R.id.text1, results));
+                            R.layout.list_item_nachrichten, android.R.id.text1, infos));
                 }
             }
         }.execute();

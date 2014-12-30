@@ -51,7 +51,7 @@ public class APIClient {
     public static Map<String, String> getUebersicht() {
         Map<String, String> returnValues = new HashMap<String, String>();
         //falls mal mehr Dateien ausgelesen werden müssen
-        for (String param : new String[]{"http://www.svbrockscheid.de/svbapp/app.php"}) {
+        for (String param : new String[]{BuildDependentConstants.URL + "/app.php"}) {
             returnValues.putAll(ValueParser.parse(getFileContent(param)));
         }
         return returnValues;
@@ -86,7 +86,7 @@ public class APIClient {
      * @return Alle Nachrichten, fertig geparsed.
      */
     public static InfoNachricht[] getNachrichten() {
-        return GSON.fromJson(getFileContent("http://www.svbrockscheid.de/svbapp/nachrichten.json"), InfoNachricht[].class);
+        return GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class);
     }
 
     public static boolean registerCGM(Activity activity) {
@@ -171,7 +171,7 @@ public class APIClient {
         //key an Server schicken
         URLConnection urlConnection;
         try {
-            urlConnection = new URL("http://www.svbrockscheid.de/svbapp/test.php?key=" + regid).openConnection();
+            urlConnection = new URL(BuildDependentConstants.URL + "/register.php?key=" + regid).openConnection();
             urlConnection.connect();
             urlConnection.getContent();
         } catch (IOException e) {
