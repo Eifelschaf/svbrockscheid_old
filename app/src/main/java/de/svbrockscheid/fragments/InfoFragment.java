@@ -62,8 +62,10 @@ public class InfoFragment extends ListFragment {
                 super.onPostExecute(results);
                 //neu laden
                 CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-                setListAdapter(new ArrayAdapter<>(getActivity(),
-                        R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
+                if (infoNachrichten != null) {
+                    setListAdapter(new ArrayAdapter<>(getActivity(),
+                            R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
+                }
             }
         }.execute();
     }
