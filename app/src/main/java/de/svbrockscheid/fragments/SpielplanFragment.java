@@ -1,5 +1,6 @@
 package de.svbrockscheid.fragments;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -30,47 +31,6 @@ public class SpielplanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_spielplan, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        new AsyncTask<Void, Void, LigaSpiel[]>() {
-            @Override
-            protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreispokal.json");
-            }
-
-            @Override
-            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
-                super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreispokal.json").get(), R.id.kreispokal);
-            }
-        }.execute();
-        new AsyncTask<Void, Void, LigaSpiel[]>() {
-            @Override
-            protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreisliga1.json");
-            }
-
-            @Override
-            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
-                super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga1.json").get(), R.id.kreisliga);
-            }
-        }.execute();
-        new AsyncTask<Void, Void, LigaSpiel[]>() {
-            @Override
-            protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreisliga2.json");
-            }
-
-            @Override
-            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
-                super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga2.json").get(), R.id.kreisliga2);
-            }
-        }.execute();
     }
 
     private void reloadData(CursorList<LigaSpiel> ligaSpiele, @IdRes int zielId) {
@@ -114,5 +74,53 @@ public class SpielplanFragment extends Fragment {
                 table.addView(newLine);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //menü richten
+        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.SPIELPLAN_POSITION);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        new AsyncTask<Void, Void, LigaSpiel[]>() {
+            @Override
+            protected LigaSpiel[] doInBackground(Void... params) {
+                return APIClient.getLigaSpiele("kreispokal.json");
+            }
+
+            @Override
+            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
+                super.onPostExecute(ligaSpiele);
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreispokal.json").get(), R.id.kreispokal);
+            }
+        }.execute();
+        new AsyncTask<Void, Void, LigaSpiel[]>() {
+            @Override
+            protected LigaSpiel[] doInBackground(Void... params) {
+                return APIClient.getLigaSpiele("kreisliga1.json");
+            }
+
+            @Override
+            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
+                super.onPostExecute(ligaSpiele);
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga1.json").get(), R.id.kreisliga);
+            }
+        }.execute();
+        new AsyncTask<Void, Void, LigaSpiel[]>() {
+            @Override
+            protected LigaSpiel[] doInBackground(Void... params) {
+                return APIClient.getLigaSpiele("kreisliga2.json");
+            }
+
+            @Override
+            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
+                super.onPostExecute(ligaSpiele);
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga2.json").get(), R.id.kreisliga2);
+            }
+        }.execute();
     }
 }

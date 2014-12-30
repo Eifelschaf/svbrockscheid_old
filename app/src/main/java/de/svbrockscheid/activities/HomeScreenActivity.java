@@ -76,13 +76,15 @@ public class HomeScreenActivity extends ActionBarActivity
                 selectedFragment = new UebersichtsFragment();
                 backstackName = UEBERSICHT;
         }
-        FragmentTransaction transaction = fragmentManager.beginTransaction()
-                .replace(R.id.container, selectedFragment);
-        Fragment fragmentById = fragmentManager.findFragmentById(R.id.container);
-        if (fragmentById != null && fragmentById.getClass() != selectedFragment.getClass()) {
-            //nur in den backstack wenn es schon was gibt
-            transaction.addToBackStack(backstackName);
+        if (!fragmentManager.popBackStackImmediate(backstackName, 0)) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction()
+                    .replace(R.id.container, selectedFragment);
+            Fragment fragmentById = fragmentManager.findFragmentById(R.id.container);
+            if (fragmentById != null && fragmentById.getClass() != selectedFragment.getClass()) {
+                //nur in den backstack wenn es schon was gibt
+                transaction.addToBackStack(backstackName);
+            }
+            transaction.commit();
         }
-        transaction.commit();
     }
 }

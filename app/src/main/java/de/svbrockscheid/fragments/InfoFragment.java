@@ -65,4 +65,11 @@ public class InfoFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_nachrichten, container, false);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //menü richten
+        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
+    }
 }

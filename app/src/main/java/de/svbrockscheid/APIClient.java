@@ -56,7 +56,7 @@ public class APIClient {
         //falls mal mehr Dateien ausgelesen werden müssen
         for (String param : new String[]{BuildDependentConstants.URL + "/app.php"}) {
             String fileContent = getFileContent(param);
-            if (fileContent != null) {
+            if (fileContent != null && !fileContent.isEmpty()) {
                 //store the file locally
                 if (context != null) {
                     FileOutputStream cacheFile;
@@ -116,21 +116,23 @@ public class APIClient {
     }
 
     private static String getCachedFileContent(Context context, String fileName) {
-        try {
-            FileInputStream fileInputStream = context.openFileInput(fileName);
-            BufferedReader instream = new BufferedReader(new InputStreamReader(fileInputStream));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = instream.readLine()) != null) {
-                builder.append(line);
+        if (context != null) {
+            try {
+                FileInputStream fileInputStream = context.openFileInput(fileName);
+                BufferedReader instream = new BufferedReader(new InputStreamReader(fileInputStream));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = instream.readLine()) != null) {
+                    builder.append(line);
+                }
+                instream.close();
+                //den stringbuilder parsen
+                return builder.toString();
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "FileNotFoundException", e);
+            } catch (IOException e) {
+                Log.e(TAG, "IOException", e);
             }
-            instream.close();
-            //den stringbuilder parsen
-            return builder.toString();
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "FileNotFoundException", e);
-        } catch (IOException e) {
-            Log.e(TAG, "IOException", e);
         }
         return "";
     }
