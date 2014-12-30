@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.R;
 import de.svbrockscheid.model.InfoNachricht;
+import se.emilsjolander.sprinkles.CursorList;
+import se.emilsjolander.sprinkles.Query;
 
 /**
  * A fragment representing a list of Items.
@@ -41,6 +40,10 @@ public class InfoFragment extends ListFragment {
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
+        //lokale Nachrichten laden
+        CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
+        setListAdapter(new ArrayAdapter<>(activity,
+                R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
         new AsyncTask<Void, Void, InfoNachricht[]>() {
             @Override
             protected InfoNachricht[] doInBackground(Void... params) {
@@ -50,17 +53,10 @@ public class InfoFragment extends ListFragment {
             @Override
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
-                if (results != null) {
-                    //nullwerte entfernen
-                    List<InfoNachricht> infos = new ArrayList<>();
-                    for (InfoNachricht nachricht : results) {
-                        if (nachricht != null) {
-                            infos.add(nachricht);
-                        }
-                    }
-                    setListAdapter(new ArrayAdapter<>(activity,
-                            R.layout.list_item_nachrichten, android.R.id.text1, infos));
-                }
+                //neu laden
+                CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
+                setListAdapter(new ArrayAdapter<>(activity,
+                        R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
             }
         }.execute();
     }

@@ -1,16 +1,34 @@
 package de.svbrockscheid.model;
 
+import se.emilsjolander.sprinkles.Model;
+import se.emilsjolander.sprinkles.annotations.Column;
+import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.annotations.Table;
+
 /**
  * Created by Matthias on 01.10.2014.
  */
-public class LigaSpiel {
+@Table("LigaSpiel")
+public class LigaSpiel extends Model {
+
+    @Column("datum")
     private String datum;
+    @Column("zeit")
     private String zeit;
+    @Column("ort")
     private String ort;
+    @Column("paar1")
     private String paar1;
+    @Column("paar2")
     private String paar2;
+    @Column("erg")
     private String erg;
+    @Key
+    @Column("_id")
     private int bericht;
+
+    @Column("typ")
+    private String typ;
 
     public String getDatum() {
         return datum;
@@ -66,5 +84,9 @@ public class LigaSpiel {
 
     public void setBericht(int bericht) {
         this.bericht = bericht;
+    }
+
+    public void setTyp(String typ) {
+        this.typ = typ;
     }
 }

@@ -15,9 +15,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -48,28 +51,80 @@ public class APIClient {
      *
      * @return Alle Variablen, die in der Datei app.php gesetzt werden.
      */
-    public static Map<String, String> getUebersicht() {
+    public static Map<String, String> getUebersicht(Context context) {
         Map<String, String> returnValues = new HashMap<String, String>();
         //falls mal mehr Dateien ausgelesen werden müssen
         for (String param : new String[]{BuildDependentConstants.URL + "/app.php"}) {
-            returnValues.putAll(ValueParser.parse(getFileContent(param)));
+            String fileContent = getFileContent(param);
+            if (fileContent != null) {
+                //store the file locally
+                if (context != null) {
+                    FileOutputStream cacheFile;
+                    try {
+                        cacheFile = context.openFileOutput("app.php", Context.MODE_PRIVATE);
+                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(cacheFile);
+                        outputStreamWriter.write(fileContent);
+                        outputStreamWriter.flush();
+                        outputStreamWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                //try to read the local file
+                fileContent = getCachedFileContent(context, "app.php");
+            }
+            returnValues.putAll(ValueParser.parse(fileContent));
         }
         return returnValues;
     }
 
     public static LigaSpiel[] getLigaSpiele(String fileName) {
         String fileContent = getFileContent("http://www.svbrockscheid.de/" + fileName);
-        return GSON.fromJson(fileContent, LigaSpiel[].class);
+        LigaSpiel[] ligaSpiele = GSON.fromJson(fileContent, LigaSpiel[].class);
+        if (ligaSpiele != null) {
+            //ligaspiele speichern
+            for (LigaSpiel spiel : ligaSpiele) {
+                if (spiel != null) {
+                    spiel.setTyp(fileName);
+                    spiel.save();
+                }
+            }
+        }
+        return ligaSpiele;
     }
 
     private static String getFileContent(String fileName) {
         try {
+//            HttpGet client = new HttpGet(fileName);
+//            client.addHeader("If-Modified-Since", "");
             BufferedReader instream = new BufferedReader(new InputStreamReader(new URL(fileName).openConnection().getInputStream()));
             StringBuilder builder = new StringBuilder();
             String line;
             while ((line = instream.readLine()) != null) {
                 builder.append(line);
             }
+            instream.close();
+            //den stringbuilder parsen
+            return builder.toString();
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "FileNotFoundException", e);
+        } catch (IOException e) {
+            Log.e(TAG, "IOException", e);
+        }
+        return "";
+    }
+
+    private static String getCachedFileContent(Context context, String fileName) {
+        try {
+            FileInputStream fileInputStream = context.openFileInput(fileName);
+            BufferedReader instream = new BufferedReader(new InputStreamReader(fileInputStream));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = instream.readLine()) != null) {
+                builder.append(line);
+            }
+            instream.close();
             //den stringbuilder parsen
             return builder.toString();
         } catch (FileNotFoundException e) {
@@ -86,7 +141,15 @@ public class APIClient {
      * @return Alle Nachrichten, fertig geparsed.
      */
     public static InfoNachricht[] getNachrichten() {
-        return GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class);
+        InfoNachricht[] infoNachrichten = GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class);
+        if (infoNachrichten != null) {
+            for (InfoNachricht nachricht : infoNachrichten) {
+                if (nachricht != null) {
+                    nachricht.save();
+                }
+            }
+        }
+        return infoNachrichten;
     }
 
     public static boolean registerCGM(Activity activity) {

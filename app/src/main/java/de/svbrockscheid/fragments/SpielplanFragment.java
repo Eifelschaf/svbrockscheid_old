@@ -2,6 +2,7 @@ package de.svbrockscheid.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.R;
 import de.svbrockscheid.model.LigaSpiel;
+import se.emilsjolander.sprinkles.CursorList;
+import se.emilsjolander.sprinkles.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,16 +44,7 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                if (ligaSpiele != null) {
-                    View view1 = getView();
-                    if (view1 != null) {
-                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreispokal);
-                        if (table != null) {
-                            table.removeAllViews();
-                            setupLine(ligaSpiele, table);
-                        }
-                    }
-                }
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreispokal.json").get(), R.id.kreispokal);
             }
         }.execute();
         new AsyncTask<Void, Void, LigaSpiel[]>() {
@@ -62,16 +56,7 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                if (ligaSpiele != null) {
-                    View view1 = getView();
-                    if (view1 != null) {
-                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga);
-                        if (table != null) {
-                            table.removeAllViews();
-                            setupLine(ligaSpiele, table);
-                        }
-                    }
-                }
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga1.json").get(), R.id.kreisliga);
             }
         }.execute();
         new AsyncTask<Void, Void, LigaSpiel[]>() {
@@ -83,21 +68,25 @@ public class SpielplanFragment extends Fragment {
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                if (ligaSpiele != null) {
-                    View view1 = getView();
-                    if (view1 != null) {
-                        LinearLayout table = (LinearLayout) view1.findViewById(R.id.kreisliga2);
-                        if (table != null) {
-                            table.removeAllViews();
-                            setupLine(ligaSpiele, table);
-                        }
-                    }
-                }
+                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga2.json").get(), R.id.kreisliga2);
             }
         }.execute();
     }
 
-    private void setupLine(LigaSpiel[] ligaSpiele, LinearLayout table) {
+    private void reloadData(CursorList<LigaSpiel> ligaSpiele, @IdRes int zielId) {
+        if (ligaSpiele != null) {
+            View view1 = getView();
+            if (view1 != null) {
+                LinearLayout table = (LinearLayout) view1.findViewById(zielId);
+                if (table != null) {
+                    table.removeAllViews();
+                    setupLine(ligaSpiele, table);
+                }
+            }
+        }
+    }
+
+    private void setupLine(CursorList<LigaSpiel> ligaSpiele, LinearLayout table) {
         //neue Tabellenzeile
         for (LigaSpiel spiel : ligaSpiele) {
             View newLine = LayoutInflater.from(table.getContext()).inflate(R.layout.list_item_spiel, table, false);
@@ -122,8 +111,8 @@ public class SpielplanFragment extends Fragment {
                 if (ort != null) {
                     ort.setText(spiel.getOrt());
                 }
+                table.addView(newLine);
             }
-            table.addView(newLine);
         }
     }
 }

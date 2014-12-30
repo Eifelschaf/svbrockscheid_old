@@ -52,7 +52,7 @@ public class UebersichtsFragment extends Fragment {
 
             @Override
             protected Map<String, String> doInBackground(String... params) {
-                return APIClient.getUebersicht();
+                return APIClient.getUebersicht(getActivity());
             }
 
             @Override
