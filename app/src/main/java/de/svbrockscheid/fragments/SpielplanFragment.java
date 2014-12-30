@@ -1,6 +1,5 @@
 package de.svbrockscheid.fragments;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -81,11 +80,6 @@ public class SpielplanFragment extends Fragment {
         super.onResume();
         //menü richten
         ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.SPIELPLAN_POSITION);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
         new AsyncTask<Void, Void, LigaSpiel[]>() {
             @Override
             protected LigaSpiel[] doInBackground(Void... params) {

@@ -1,6 +1,5 @@
 package de.svbrockscheid.fragments;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,8 +41,10 @@ public class UebersichtsFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onResume() {
+        super.onResume();
+        //menü richten
+        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.UEBERSICHT_POSITION);
         new AsyncTask<String, Void, Map<String, String>>() {
 
             @Override
@@ -58,13 +59,6 @@ public class UebersichtsFragment extends Fragment {
                 setupView(values, getView());
             }
         }.execute();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //menü richten
-        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.UEBERSICHT_POSITION);
     }
 
     /**

@@ -1,6 +1,5 @@
 package de.svbrockscheid.fragments;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -37,12 +36,20 @@ public class InfoFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_nachrichten, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //menü richten
+        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
         //lokale Nachrichten laden
         CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-        setListAdapter(new ArrayAdapter<>(activity,
+        setListAdapter(new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
         new AsyncTask<Void, Void, InfoNachricht[]>() {
             @Override
@@ -55,21 +62,9 @@ public class InfoFragment extends ListFragment {
                 super.onPostExecute(results);
                 //neu laden
                 CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-                setListAdapter(new ArrayAdapter<>(activity,
+                setListAdapter(new ArrayAdapter<>(getActivity(),
                         R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
             }
         }.execute();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_nachrichten, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //menü richten
-        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
     }
 }
