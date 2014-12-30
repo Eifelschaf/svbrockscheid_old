@@ -3,6 +3,7 @@ package de.svbrockscheid.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,10 @@ public class UebersichtsFragment extends Fragment {
         super.onResume();
         //menü richten
         ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.UEBERSICHT_POSITION);
+        reloadAll();
+    }
+
+    private void reloadAll() {
         new AsyncTask<String, Void, Map<String, String>>() {
 
             @Override
@@ -56,7 +61,14 @@ public class UebersichtsFragment extends Fragment {
             protected void onPostExecute(Map<String, String> values) {
                 super.onPostExecute(values);
                 //werte einfügen
-                setupView(values, getView());
+                View view = getView();
+                if (view != null) {
+                    setupView(values, view);
+                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+                    if (refreshLayout != null) {
+                        refreshLayout.setRefreshing(false);
+                    }
+                }
             }
         }.execute();
     }
@@ -156,6 +168,20 @@ public class UebersichtsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_uebersicht, container, false);
+        View view = inflater.inflate(R.layout.fragment_uebersicht, container, false);
+        if (view != null) {
+            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+            if (refreshLayout != null) {
+                refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+//                        if(!refreshLayout.isRefreshing()) {
+                        reloadAll();
+//                        }
+                    }
+                });
+            }
+        }
+        return view;
     }
 }

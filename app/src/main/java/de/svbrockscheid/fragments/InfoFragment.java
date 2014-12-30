@@ -3,6 +3,7 @@ package de.svbrockscheid.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +28,22 @@ public class InfoFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_nachrichten, container, false);
+        View view = inflater.inflate(R.layout.fragment_nachrichten, container, false);
+        if (view != null) {
+            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+            if (refreshLayout != null) {
+                refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+//                        if(!refreshLayout.isRefreshing()) {
+                        reloadAll();
+//                        }
+                    }
+                });
+            }
+        }
+        return view;
     }
 
     @Override
@@ -49,8 +53,15 @@ public class InfoFragment extends ListFragment {
         ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
         //lokale Nachrichten laden
         CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-        setListAdapter(new ArrayAdapter<>(getActivity(),
-                R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
+        if (infoNachrichten != null) {
+            setListAdapter(new ArrayAdapter<>(getActivity(),
+                    R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
+            infoNachrichten.close();
+        }
+        reloadAll();
+    }
+
+    private void reloadAll() {
         new AsyncTask<Void, Void, InfoNachricht[]>() {
             @Override
             protected InfoNachricht[] doInBackground(Void... params) {
@@ -65,6 +76,14 @@ public class InfoFragment extends ListFragment {
                 if (infoNachrichten != null) {
                     setListAdapter(new ArrayAdapter<>(getActivity(),
                             R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
+                    infoNachrichten.close();
+                }
+                View view = getView();
+                if (view != null) {
+                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+                    if (refreshLayout != null) {
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
             }
         }.execute();
