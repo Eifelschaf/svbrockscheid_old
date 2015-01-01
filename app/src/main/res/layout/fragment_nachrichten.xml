@@ -7,16 +7,11 @@
     android:layout_height="match_parent"
     tools:context="de.svbrockscheid.fragments.InfoFragment">
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            tools:listitem="@layout/list_item_nachrichten" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        tools:listitem="@layout/list_item_nachrichten" />
 </android.support.v4.widget.SwipeRefreshLayout>
