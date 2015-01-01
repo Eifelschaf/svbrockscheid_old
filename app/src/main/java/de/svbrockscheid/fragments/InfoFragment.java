@@ -1,24 +1,28 @@
 package de.svbrockscheid.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.R;
+import de.svbrockscheid.adapters.NachrichtenAdapter;
 import de.svbrockscheid.model.InfoNachricht;
-import se.emilsjolander.sprinkles.CursorList;
-import se.emilsjolander.sprinkles.Query;
+import de.svbrockscheid.model.UpdateInfo;
 
 /**
  * A fragment representing a list of Items.
  */
-public class InfoFragment extends ListFragment {
+public class InfoFragment extends Fragment {
+
+    private NachrichtenAdapter nachrichtenAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -31,14 +35,12 @@ public class InfoFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nachrichten, container, false);
         if (view != null) {
-            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutNachrichten);
             if (refreshLayout != null) {
                 refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-//                        if(!refreshLayout.isRefreshing()) {
                         reloadAll();
-//                        }
                     }
                 });
             }
@@ -51,14 +53,14 @@ public class InfoFragment extends ListFragment {
         super.onResume();
         //menü richten
         ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
-        //lokale Nachrichten laden
-        CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-        if (infoNachrichten != null) {
-            setListAdapter(new ArrayAdapter<>(getActivity(),
-                    R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
-            infoNachrichten.close();
+        View view = getView();
+        if (view != null) {
+            //nachrichten laden
+            RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
+            list.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
+            list.setAdapter(getNachrichtenAdapter());
+            reloadAll();
         }
-        reloadAll();
     }
 
     private void reloadAll() {
@@ -72,20 +74,40 @@ public class InfoFragment extends ListFragment {
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
                 //neu laden
-                CursorList<InfoNachricht> infoNachrichten = Query.all(InfoNachricht.class).get();
-                if (infoNachrichten != null) {
-                    setListAdapter(new ArrayAdapter<>(getActivity(),
-                            R.layout.list_item_nachrichten, android.R.id.text1, infoNachrichten.asList()));
-                    infoNachrichten.close();
-                }
+                getNachrichtenAdapter().refresh();
                 View view = getView();
                 if (view != null) {
-                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutNachrichten);
                     if (refreshLayout != null) {
                         refreshLayout.setRefreshing(false);
                     }
                 }
             }
         }.execute();
+        //check for an update
+        new AsyncTask<Context, Void, UpdateInfo>() {
+            @Override
+            protected UpdateInfo doInBackground(Context... params) {
+                if (params != null && params.length > 0) {
+                    return APIClient.checkForUpdate(params[0]);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(UpdateInfo updateInfo) {
+                super.onPostExecute(updateInfo);
+                //show/hide the update Info window
+                getNachrichtenAdapter().setUpdateInfo(updateInfo);
+                nachrichtenAdapter.refresh();
+            }
+        }.execute(getActivity());
+    }
+
+    public NachrichtenAdapter getNachrichtenAdapter() {
+        if (nachrichtenAdapter == null) {
+            nachrichtenAdapter = new NachrichtenAdapter();
+        }
+        return nachrichtenAdapter;
     }
 }

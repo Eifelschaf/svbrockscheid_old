@@ -28,6 +28,7 @@ import java.util.Map;
 
 import de.svbrockscheid.model.InfoNachricht;
 import de.svbrockscheid.model.LigaSpiel;
+import de.svbrockscheid.model.UpdateInfo;
 
 /**
  * Created by Matthias on 01.10.2014.
@@ -312,5 +313,18 @@ public class APIClient {
             return false;
         }
         return true;
+    }
+
+    public static UpdateInfo checkForUpdate(Context context) {
+        //auf update prüfen
+        try {
+            String fileContent = getFileContent(BuildDependentConstants.URL + "/updateCheck.php?version=" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+            if (fileContent != null && !fileContent.isEmpty()) {
+                return GSON.fromJson(fileContent, UpdateInfo.class);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "NameNotFoundException", e);
+        }
+        return null;
     }
 }

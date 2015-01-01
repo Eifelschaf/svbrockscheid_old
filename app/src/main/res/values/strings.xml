@@ -30,5 +30,7 @@
     <string name="kreisliga">Kreisliga D</string>
     <string name="winterpause">Winterpause</string>
     <string name="neuigkeiten">Neuigkeiten!</string>
+    <string name="download">Download</string>
+    <string name="update_verfuegbar">Es gibt ein Update der App</string>
 
 </resources>

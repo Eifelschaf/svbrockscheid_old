@@ -64,7 +64,7 @@ public class UebersichtsFragment extends Fragment {
                 View view = getView();
                 if (view != null) {
                     setupView(values, view);
-                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+                    SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutUebersicht);
                     if (refreshLayout != null) {
                         refreshLayout.setRefreshing(false);
                     }
@@ -170,14 +170,12 @@ public class UebersichtsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_uebersicht, container, false);
         if (view != null) {
-            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+            final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutUebersicht);
             if (refreshLayout != null) {
                 refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-//                        if(!refreshLayout.isRefreshing()) {
                         reloadAll();
-//                        }
                     }
                 });
             }
