@@ -52,7 +52,10 @@ public class InfoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //menü richten
-        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.INFO_POSITION);
+        MenuFragment menuFragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        if (menuFragment != null) {
+            menuFragment.justCheckItem(MenuFragment.INFO_POSITION);
+        }
         View view = getView();
         if (view != null) {
             //nachrichten laden

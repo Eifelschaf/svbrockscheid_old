@@ -7,6 +7,8 @@
         <item name="colorPrimary">@color/svtheme_color</item>
         <item name="colorPrimaryDark">@color/svtheme_color_dark</item>
         <item name="colorAccent">@color/svtheme_color_accent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.PushMessageIntentService;
@@ -29,13 +30,30 @@ public class HomeScreenActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-        MenuFragment mMenuFragment = (MenuFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        //actionbar aufsetzen
+        Toolbar toolbar = (Toolbar) findViewById(R.id.svb_toolbar);
+        setSupportActionBar(toolbar);
+
+//        //check if the menu should be displayed or not
+//        if(findViewById(R.id.container2) != null) {
+//            // alle views auf einmal anzeigen
+//            getSupportFragmentManager().beginTransaction().replace(R.id.container, new InfoFragment()).replace(R.id.container2, new UebersichtsFragment()).replace(R.id.container3, new SpielplanFragment()).commit();
+//        } else {
+        //menü anzeigen
+        MenuFragment mMenuFragment;
+        if (savedInstanceState == null) {
+            mMenuFragment = new MenuFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.navigation_drawer, mMenuFragment).commit();
+        } else {
+            mMenuFragment = (MenuFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        }
 
         // Set up the drawer.
         mMenuFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                (DrawerLayout) findViewById(R.id.drawer_layout),
+                this);
         APIClient.registerCGM(this);
     }
 
@@ -76,12 +94,12 @@ public class HomeScreenActivity extends ActionBarActivity
                 selectedFragment = new UebersichtsFragment();
                 backstackName = UEBERSICHT;
         }
-        if (!fragmentManager.popBackStackImmediate(backstackName, 0)) {
+        if (fragmentManager.getBackStackEntryCount() == 0 || !fragmentManager.popBackStackImmediate(backstackName, 0)) {
             FragmentTransaction transaction = fragmentManager.beginTransaction()
                     .replace(R.id.container, selectedFragment);
             Fragment fragmentById = fragmentManager.findFragmentById(R.id.container);
             if (fragmentById != null && fragmentById.getClass() != selectedFragment.getClass()) {
-                //nur in den backstack wenn es schon was gibt
+                //nur in den back stack, wenn es schon was gibt
                 transaction.addToBackStack(backstackName);
             }
             transaction.commit();

@@ -95,7 +95,10 @@ public class SpielplanFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //menü richten
-        ((MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer)).justCheckItem(MenuFragment.SPIELPLAN_POSITION);
+        MenuFragment menuFragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        if (menuFragment != null) {
+            menuFragment.justCheckItem(MenuFragment.SPIELPLAN_POSITION);
+        }
         reloadAll();
     }
 
