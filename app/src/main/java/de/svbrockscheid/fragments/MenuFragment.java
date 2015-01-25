@@ -18,9 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 
 import de.svbrockscheid.R;
 
@@ -34,6 +33,7 @@ public class MenuFragment extends Fragment {
     public static final int INFO_POSITION = 0;
     public static final int UEBERSICHT_POSITION = 1;
     public static final int SPIELPLAN_POSITION = 2;
+    public static final int ABOUT_POSITION = 3;
     /**
      * Remember the position of the selected item.
      */
@@ -54,7 +54,7 @@ public class MenuFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private LinearLayout mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -92,24 +92,31 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
+        mDrawerListView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_menu, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
+                android.R.layout.simple_list_item_1,
                 android.R.id.text1,
                 new String[]{
                         getString(R.string.menu_infos),
                         getString(R.string.menu_uebersicht),
                         getString(R.string.menu_spielplan),
-                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+                        getString(R.string.menu_about)
+                });
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View adapterView = adapter.getView(i, null, mDrawerListView);
+            final int finalI = i;
+            adapterView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.setSelected(true);
+                    selectItem(finalI);
+
+                }
+            });
+            mDrawerListView.addView(adapterView);
+        }
         return mDrawerListView;
     }
 
@@ -192,9 +199,6 @@ public class MenuFragment extends Fragment {
 
     public void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
@@ -205,9 +209,6 @@ public class MenuFragment extends Fragment {
 
     public void justCheckItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
