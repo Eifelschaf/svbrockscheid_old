@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.PushMessageIntentService;
 import de.svbrockscheid.R;
+import de.svbrockscheid.fragments.AboutFragment;
 import de.svbrockscheid.fragments.InfoFragment;
 import de.svbrockscheid.fragments.MenuFragment;
 import de.svbrockscheid.fragments.SpielplanFragment;
@@ -24,6 +25,7 @@ public class HomeScreenActivity extends ActionBarActivity
     public static final String NEUE_NACHRICHTEN = "de.svbrockscheid.NEUE_NACHRICHTEN";
     private static final String UEBERSICHT = "übersicht";
     private static final String SPIELPLAN = "spielplan";
+    private static final String ABOUT = "about";
     private static final String INFO = "info";
 
     @Override
@@ -90,9 +92,13 @@ public class HomeScreenActivity extends ActionBarActivity
                 selectedFragment = new SpielplanFragment();
                 backstackName = SPIELPLAN;
                 break;
+            case MenuFragment.ABOUT_POSITION:
+                selectedFragment = new AboutFragment();
+                backstackName = ABOUT;
+                break;
             default:
                 selectedFragment = new UebersichtsFragment();
-                backstackName = UEBERSICHT;
+                backstackName = INFO;
         }
         if (fragmentManager.getBackStackEntryCount() == 0 || !fragmentManager.popBackStackImmediate(backstackName, 0)) {
             FragmentTransaction transaction = fragmentManager.beginTransaction()
