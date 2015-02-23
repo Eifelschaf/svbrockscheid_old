@@ -23,7 +23,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.svbrockscheid.model.InfoNachricht;
@@ -144,15 +146,15 @@ public class APIClient {
      * @return Alle Nachrichten, fertig geparsed.
      */
     public static InfoNachricht[] getNachrichten() {
-        InfoNachricht[] infoNachrichten = GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class);
-        if (infoNachrichten != null) {
-            for (InfoNachricht nachricht : infoNachrichten) {
-                if (nachricht != null) {
-                    nachricht.save();
-                }
+        List<InfoNachricht> infoNachrichten = Arrays.asList(GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class));
+        for (InfoNachricht nachricht : infoNachrichten) {
+            if (nachricht != null && !nachricht.isDelete()) {
+                nachricht.save();
+            } else if (nachricht != null) {
+                nachricht.delete();
             }
         }
-        return infoNachrichten;
+        return infoNachrichten.toArray(new InfoNachricht[infoNachrichten.size()]);
     }
 
     public static boolean registerCGM(Activity activity) {

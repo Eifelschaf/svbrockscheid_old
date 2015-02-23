@@ -23,6 +23,8 @@ public class InfoNachricht extends Model {
     @Column("zeit")
     private Date zeit = new Date();
 
+    private boolean del = false;
+
     public Date getZeit() {
         return zeit;
     }
@@ -34,5 +36,9 @@ public class InfoNachricht extends Model {
     @Override
     public String toString() {
         return nachricht;
+    }
+
+    public boolean isDelete() {
+        return del;
     }
 }
