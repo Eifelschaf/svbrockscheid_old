@@ -12,14 +12,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/ligaTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="10dp"
+                android:paddingTop="8dp"
                 android:text="@string/title_liga"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/posNach"
                 android:gravity="center_horizontal"
-                android:paddingTop="10dp"
+                android:paddingTop="8dp"
                 android:text="@string/naechstes_spiel"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/naechsteInfos"
                 android:gravity="center_horizontal"
-                android:paddingTop="10dp"
+                android:paddingTop="8dp"
                 android:text="@string/letztes_spiel"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 

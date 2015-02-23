@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 
 import de.svbrockscheid.R;
 
@@ -54,7 +53,7 @@ public class MenuFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mDrawerListView;
+    private ViewGroup mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -92,8 +91,8 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (LinearLayout) inflater.inflate(
-                R.layout.fragment_menu, container, false);
+        mDrawerListView = (ViewGroup) inflater.inflate(R.layout.fragment_menu, container, false);
+        ViewGroup listView = (ViewGroup) mDrawerListView.findViewById(R.id.list);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_1,
@@ -115,7 +114,7 @@ public class MenuFragment extends Fragment {
 
                 }
             });
-            mDrawerListView.addView(adapterView);
+            listView.addView(adapterView);
         }
         return mDrawerListView;
     }

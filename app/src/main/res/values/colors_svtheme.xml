@@ -2,7 +2,8 @@
 <resources>
     <color name="svtheme_color">#020a52</color>
     <color name="svtheme_color_dark">#ff01052f</color>
-    <color name="svtheme_color_accent">#ffa56f07</color>
+    <color name="svtheme_color_icon_text">#ffffffff</color>
+    <color name="svtheme_color_accent">#ffc49800</color>
     <color name="cardBackground">#ff414141</color>
     <color name="cardBackgroundUpdate">@color/svtheme_color_accent</color>
 </resources>

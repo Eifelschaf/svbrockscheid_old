@@ -1,38 +1,46 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/header"
+        style="@style/Widget.AppCompat.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorAccent">
-
-        <ImageView
-            android:id="@+id/football"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/dark_circle_back"
-            android:padding="15dp"
-            android:src="@drawable/ic_football" />
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/football"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="8dp"
             android:text="@string/sv_brockscheid"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
-</LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/header"
+        android:background="?attr/colorAccent"
+        android:orientation="vertical"
+        android:paddingTop="28dp">
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/football"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="29dp"
+        android:elevation="5dp"
+        android:src="@drawable/ic_logo_small" />
+</RelativeLayout>

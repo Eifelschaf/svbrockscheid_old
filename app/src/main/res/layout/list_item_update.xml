@@ -4,21 +4,23 @@
     xmlns:auto="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:orientation="vertical"
     auto:cardBackgroundColor="@color/cardBackgroundUpdate">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
 
         <TextView
             android:id="@+id/nachricht"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/svtheme_color_icon_text"
             tools:text="@string/update_verfuegbar" />
 
         <Button
@@ -27,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/nachricht"
+            android:layout_marginTop="8dp"
             android:text="@string/download" />
     </RelativeLayout>
 

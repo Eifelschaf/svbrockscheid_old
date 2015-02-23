@@ -32,8 +32,9 @@
     <string name="neuigkeiten">Neuigkeiten!</string>
     <string name="download">Download</string>
     <string name="update_verfuegbar">Es gibt ein Update der App</string>
-    <string name="icon_hinweis">Icon von Icons8</string>
-    <string name="icon_link">http://icons8.com/web-app/6049/Football</string>
     <string name="menu_about">Über</string>
     <string name="versionsInfo">Version: %1$s</string>
+    <string name="created_by">Diese App wurde geschrieben von</string>
+    <string name="name_matthias">Matthias Kutscheid</string>
+    <string name="name_david">David Veit</string>
 </resources>
