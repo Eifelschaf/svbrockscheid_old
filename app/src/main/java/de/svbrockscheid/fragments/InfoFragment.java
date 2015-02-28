@@ -62,7 +62,7 @@ public class InfoFragment extends Fragment {
             RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
             list.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
             list.setAdapter(getNachrichtenAdapter());
-            reloadAll();
+            checkForUpdate();
         }
     }
 
@@ -76,8 +76,6 @@ public class InfoFragment extends Fragment {
             @Override
             protected void onPostExecute(InfoNachricht[] results) {
                 super.onPostExecute(results);
-                //neu laden
-                getNachrichtenAdapter().refresh();
                 View view = getView();
                 if (view != null) {
                     SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutNachrichten);
@@ -87,6 +85,10 @@ public class InfoFragment extends Fragment {
                 }
             }
         }.execute();
+        checkForUpdate();
+    }
+
+    private void checkForUpdate() {
         //check for an update
         new AsyncTask<Context, Void, UpdateInfo>() {
             @Override
@@ -102,7 +104,6 @@ public class InfoFragment extends Fragment {
                 super.onPostExecute(updateInfo);
                 //show/hide the update Info window
                 getNachrichtenAdapter().setUpdateInfo(updateInfo);
-                nachrichtenAdapter.refresh();
             }
         }.execute(getActivity());
     }

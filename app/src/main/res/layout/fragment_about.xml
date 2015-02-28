@@ -56,4 +56,16 @@
         android:layout_marginTop="5dp"
         android:text="@string/name_david"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/iconInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/david"
+        android:layout_below="@+id/david"
+        android:layout_marginTop="50dp"
+        android:text="@string/icon_hinweis"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/wallet_holo_blue_light" />
+
 </RelativeLayout>

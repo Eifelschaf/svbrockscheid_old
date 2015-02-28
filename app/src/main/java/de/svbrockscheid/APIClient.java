@@ -38,6 +38,11 @@ import de.svbrockscheid.model.UpdateInfo;
 public class APIClient {
 
     public static final String PROPERTY_REG_ID = "reg_id";
+    public static final String KREISPOKAL_JSON = "kreispokal.json";
+    public static final String KREISLIGA1_JSON = "kreisliga1.json";
+    public static final String KREISLIGA2_JSON = "kreisliga2.json";
+    public static final String AUTHORITY = "de.svbrockscheid.provider";
+    public static final String ACCOUNT_TYPE = "svbrockscheid.de";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
     private static final String TAG = "APIClient";
     private static final String PROPERTY_APP_VERSION = "appVersion";

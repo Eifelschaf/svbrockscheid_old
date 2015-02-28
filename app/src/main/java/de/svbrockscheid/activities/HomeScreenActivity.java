@@ -1,6 +1,9 @@
 package de.svbrockscheid.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.NotificationManager;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,6 +60,15 @@ public class HomeScreenActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 this);
         APIClient.registerCGM(this);
+        //sync aufsetzen
+        // Create the account type and default account
+        Account newAccount = new Account(getString(R.string.account_name), APIClient.ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        if (accountManager.addAccountExplicitly(newAccount, "", new Bundle())) {
+            ContentResolver.setIsSyncable(newAccount, APIClient.AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(newAccount, APIClient.AUTHORITY, true);
+        }
     }
 
     @Override

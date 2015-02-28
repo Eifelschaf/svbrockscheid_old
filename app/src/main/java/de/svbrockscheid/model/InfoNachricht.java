@@ -18,7 +18,7 @@ public class InfoNachricht extends Model {
     private long id;
 
     @Column("nachricht")
-    private String nachricht = "DUMMY";
+    private String nachricht = "";
 
     @Column("zeit")
     private Date zeit = new Date();

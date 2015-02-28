@@ -1,7 +1,10 @@
 package de.svbrockscheid.fragments;
 
+import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,11 +19,20 @@ import de.svbrockscheid.R;
 import de.svbrockscheid.model.LigaSpiel;
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Query;
+import se.emilsjolander.sprinkles.SprinklesContentObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SpielplanFragment extends Fragment {
+
+    private SprinklesContentObserver observer = new SprinklesContentObserver(new ContentObserver(new Handler(Looper.getMainLooper())) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            loadAll();
+        }
+    });
 
     public SpielplanFragment() {
         // Required empty public constructor
@@ -99,44 +111,31 @@ public class SpielplanFragment extends Fragment {
         if (menuFragment != null) {
             menuFragment.justCheckItem(MenuFragment.SPIELPLAN_POSITION);
         }
-        reloadAll();
+        loadAll();
+        //Änderungen anzeigen
+        observer.register(LigaSpiel.class, false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        observer.unregister();
     }
 
     private void reloadAll() {
         new AsyncTask<Void, Void, LigaSpiel[]>() {
             @Override
             protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreispokal.json");
+                APIClient.getLigaSpiele(APIClient.KREISLIGA1_JSON);
+                APIClient.getLigaSpiele(APIClient.KREISLIGA2_JSON);
+                APIClient.getLigaSpiele(APIClient.KREISPOKAL_JSON);
+                return null;
             }
 
             @Override
             protected void onPostExecute(LigaSpiel[] ligaSpiele) {
                 super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreispokal.json").get(), R.id.kreispokal);
-            }
-        }.execute();
-        new AsyncTask<Void, Void, LigaSpiel[]>() {
-            @Override
-            protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreisliga1.json");
-            }
-
-            @Override
-            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
-                super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga1.json").get(), R.id.kreisliga);
-            }
-        }.execute();
-        new AsyncTask<Void, Void, LigaSpiel[]>() {
-            @Override
-            protected LigaSpiel[] doInBackground(Void... params) {
-                return APIClient.getLigaSpiele("kreisliga2.json");
-            }
-
-            @Override
-            protected void onPostExecute(LigaSpiel[] ligaSpiele) {
-                super.onPostExecute(ligaSpiele);
-                reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", "kreisliga2.json").get(), R.id.kreisliga2);
+                loadAll();
                 View view = getView();
                 if (view != null) {
                     SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayoutSpielplan);
@@ -146,5 +145,11 @@ public class SpielplanFragment extends Fragment {
                 }
             }
         }.execute();
+    }
+
+    private void loadAll() {
+        reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", APIClient.KREISPOKAL_JSON).get(), R.id.kreispokal);
+        reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", APIClient.KREISLIGA1_JSON).get(), R.id.kreisliga);
+        reloadData(Query.many(LigaSpiel.class, "SELECT * from LigaSpiel where typ = ?", APIClient.KREISLIGA2_JSON).get(), R.id.kreisliga2);
     }
 }
