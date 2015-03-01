@@ -1,27 +1,22 @@
 package de.svbrockscheid;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import de.svbrockscheid.activities.HomeScreenActivity;
 
 /**
  * Created by Matthias on 01.10.2014.
  */
 public class PushMessageIntentService extends IntentService {
-    public static final int NOTIFICATION_ID_NEUE_NACHRICHTEN = 1;
+
     private static final String NEUE_NACHRICHTEN = "neueNachrichten";
     private static final String TYPE_PROPERTY = "type";
     private static final String TAG = "PushMessageIntentService";
-    NotificationCompat.Builder builder;
 
     public PushMessageIntentService() {
         super("PushMessageIntentService");
@@ -58,24 +53,14 @@ public class PushMessageIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotificationForNewMessages() {
-        NotificationManager mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent intent = new Intent(HomeScreenActivity.NEUE_NACHRICHTEN);
-        intent.putExtra(HomeScreenActivity.NEUE_NACHRICHTEN, 1);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                intent, 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.noticon)
-                        .setContentTitle(getString(R.string.neuigkeiten))
-                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                        .setVibrate(new long[]{300, 300, 300, 300})
-                        .setContentText(getString(R.string.neue_nachrichten));
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID_NEUE_NACHRICHTEN, mBuilder.build());
+        //get new messages
+        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        if (manager != null) {
+            Account[] accountsByType = manager.getAccountsByType(APIClient.ACCOUNT_TYPE);
+            for (Account account : accountsByType) {
+                ContentResolver.requestSync(account, APIClient.AUTHORITY, new Bundle());
+            }
+        }
     }
 
 }

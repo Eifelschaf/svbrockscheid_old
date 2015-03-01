@@ -14,13 +14,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import de.svbrockscheid.APIClient;
-import de.svbrockscheid.PushMessageIntentService;
 import de.svbrockscheid.R;
 import de.svbrockscheid.fragments.AboutFragment;
 import de.svbrockscheid.fragments.InfoFragment;
 import de.svbrockscheid.fragments.MenuFragment;
 import de.svbrockscheid.fragments.SpielplanFragment;
 import de.svbrockscheid.fragments.UebersichtsFragment;
+import de.svbrockscheid.sync.SyncAdapter;
 
 public class HomeScreenActivity extends ActionBarActivity
         implements MenuFragment.NavigationDrawerCallbacks {
@@ -80,7 +80,7 @@ public class HomeScreenActivity extends ActionBarActivity
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (notificationManager != null) {
                 //notification entfernen
-                notificationManager.cancel(PushMessageIntentService.NOTIFICATION_ID_NEUE_NACHRICHTEN);
+                notificationManager.cancel(SyncAdapter.NOTIFICATION_ID_NEUE_NACHRICHTEN);
             }
         }
     }

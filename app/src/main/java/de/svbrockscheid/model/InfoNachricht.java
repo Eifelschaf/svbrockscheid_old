@@ -41,4 +41,27 @@ public class InfoNachricht extends Model {
     public boolean isDelete() {
         return del;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InfoNachricht that = (InfoNachricht) o;
+
+        if (id != that.id) return false;
+        if (nachricht != null ? !nachricht.equals(that.nachricht) : that.nachricht != null)
+            return false;
+        if (zeit != null ? !zeit.equals(that.zeit) : that.zeit != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (nachricht != null ? nachricht.hashCode() : 0);
+        result = 31 * result + (zeit != null ? zeit.hashCode() : 0);
+        return result;
+    }
 }

@@ -30,7 +30,14 @@ public class SpielplanFragment extends Fragment {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            loadAll();
+            if (getView() != null) {
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadAll();
+                    }
+                });
+            }
         }
     });
 

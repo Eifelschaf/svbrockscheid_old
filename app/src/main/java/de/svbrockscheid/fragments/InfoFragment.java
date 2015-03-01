@@ -40,7 +40,14 @@ public class InfoFragment extends Fragment {
                 refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        reloadAll();
+                        if (getView() != null) {
+                            getView().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    reloadAll();
+                                }
+                            });
+                        }
                     }
                 });
             }
