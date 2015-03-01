@@ -6,4 +6,7 @@
     <color name="svtheme_color_accent">#ffc49800</color>
     <color name="cardBackground">#ff414141</color>
     <color name="cardBackgroundUpdate">@color/svtheme_color_accent</color>
+    <color name="menuBackground">#d2d2d2</color>
+    <color name="menuBackgroundPressed">#ffb0b0b0</color>
+    <color name="menuBackgroundSelected">#7e7e7e</color>
 </resources>

@@ -113,11 +113,15 @@ public class HomeScreenActivity extends ActionBarActivity
                 backstackName = INFO;
         }
         if (fragmentManager.getBackStackEntryCount() == 0 || !fragmentManager.popBackStackImmediate(backstackName, 0)) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction()
-                    .replace(R.id.container, selectedFragment);
             Fragment fragmentById = fragmentManager.findFragmentById(R.id.container);
-            if (fragmentById != null && fragmentById.getClass() != selectedFragment.getClass()) {
-                //nur in den back stack, wenn es schon was gibt
+            if (fragmentById != null && fragmentById.getClass() == selectedFragment.getClass()) {
+                //nichts tun!
+                return;
+            }
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, selectedFragment);
+            if (fragmentById != null) {
+                //ab in den back stack!
                 transaction.addToBackStack(backstackName);
             }
             transaction.commit();

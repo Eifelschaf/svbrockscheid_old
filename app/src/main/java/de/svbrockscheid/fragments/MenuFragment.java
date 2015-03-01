@@ -18,9 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Adapter;
+import android.widget.TextView;
 
 import de.svbrockscheid.R;
+import de.svbrockscheid.adapters.MenuAdapter;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -92,26 +94,28 @@ public class MenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDrawerListView = (ViewGroup) inflater.inflate(R.layout.fragment_menu, container, false);
-        ViewGroup listView = (ViewGroup) mDrawerListView.findViewById(R.id.list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
+        final ViewGroup listView = (ViewGroup) mDrawerListView.findViewById(R.id.list);
+        Adapter adapter = new MenuAdapter(
                 new String[]{
                         getString(R.string.menu_infos),
                         getString(R.string.menu_uebersicht),
                         getString(R.string.menu_spielplan),
                         getString(R.string.menu_about)
+                },
+                new int[]{
+                        R.drawable.ic_spieler,
+                        R.drawable.ic_pokal,
+                        R.drawable.ic_football,
+                        R.drawable.ic_foul
                 });
         for (int i = 0; i < adapter.getCount(); i++) {
-            View adapterView = adapter.getView(i, null, mDrawerListView);
+            final View adapterView = adapter.getView(i, null, mDrawerListView);
+            adapterView.setSelected(i == mCurrentSelectedPosition);
             final int finalI = i;
             adapterView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    v.setSelected(true);
                     selectItem(finalI);
-
                 }
             });
             listView.addView(adapterView);
@@ -198,6 +202,21 @@ public class MenuFragment extends Fragment {
 
     public void selectItem(int position) {
         mCurrentSelectedPosition = position;
+        if (mDrawerListView != null) {
+            ViewGroup listView = (ViewGroup) mDrawerListView.findViewById(R.id.list);
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                View currentChild = listView.getChildAt(i);
+                currentChild.setSelected(i == mCurrentSelectedPosition);
+                View icon = currentChild.findViewById(R.id.icon);
+                if (icon != null) {
+                    icon.setSelected(i == mCurrentSelectedPosition);
+                }
+                TextView text = (TextView) currentChild.findViewById(R.id.text);
+                if (text != null) {
+                    text.setSelected(i == mCurrentSelectedPosition);
+                }
+            }
+        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
