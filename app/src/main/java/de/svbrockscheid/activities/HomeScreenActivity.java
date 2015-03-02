@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 
 import de.svbrockscheid.APIClient;
 import de.svbrockscheid.R;
@@ -68,6 +69,8 @@ public class HomeScreenActivity extends ActionBarActivity
         if (accountManager.addAccountExplicitly(newAccount, "", new Bundle())) {
             ContentResolver.setIsSyncable(newAccount, APIClient.AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(newAccount, APIClient.AUTHORITY, true);
+            //set a periodic sync
+            ContentResolver.addPeriodicSync(newAccount, APIClient.AUTHORITY, new Bundle(), DateUtils.HOUR_IN_MILLIS * 4);
         }
     }
 
