@@ -70,7 +70,7 @@ public class HomeScreenActivity extends ActionBarActivity
             ContentResolver.setIsSyncable(newAccount, APIClient.AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(newAccount, APIClient.AUTHORITY, true);
             //set a periodic sync
-            ContentResolver.addPeriodicSync(newAccount, APIClient.AUTHORITY, new Bundle(), DateUtils.HOUR_IN_MILLIS * 4);
+            ContentResolver.addPeriodicSync(newAccount, APIClient.AUTHORITY, new Bundle(), DateUtils.HOUR_IN_MILLIS);
         }
     }
 

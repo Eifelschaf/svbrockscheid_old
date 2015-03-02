@@ -90,7 +90,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 showNotificationNews();
             }
         }
-        APIClient.getUebersicht(getContext());
+//        APIClient.getUebersicht(getContext());
         APIClient.getLigaSpiele(APIClient.KREISPOKAL_JSON);
         APIClient.getLigaSpiele(APIClient.KREISLIGA1_JSON);
         APIClient.getLigaSpiele(APIClient.KREISLIGA2_JSON);
