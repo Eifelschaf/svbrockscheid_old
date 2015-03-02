@@ -79,6 +79,9 @@
         </receiver>
 
         <service android:name=".PushMessageIntentService" />
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="641ac10f2b9e27b1c4e40e34dc5b3a501632f6c8" />
     </application>
 
 </manifest>

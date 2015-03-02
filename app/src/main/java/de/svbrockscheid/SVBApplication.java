@@ -3,6 +3,8 @@ package de.svbrockscheid;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
 
@@ -14,6 +16,7 @@ public class SVBApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
 

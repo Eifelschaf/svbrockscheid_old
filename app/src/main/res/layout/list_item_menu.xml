@@ -23,9 +23,10 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/icon"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
         android:textColor="@drawable/menu_text_color"
         tools:text="@string/menu_infos" />

@@ -9,4 +9,5 @@
     <color name="menuBackground">#d2d2d2</color>
     <color name="menuBackgroundPressed">#ffb0b0b0</color>
     <color name="menuBackgroundSelected">#7e7e7e</color>
+    <color name="menuTextUnselected">#7e7e7e</color>
 </resources>
