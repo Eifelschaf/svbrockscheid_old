@@ -76,18 +76,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             alteNachrichtenListe.close();
         }
         InfoNachricht[] neueNachrichten = APIClient.getNachrichten();
-        //gelöschte nachrichten aus der alten liste entfernen
-        List<InfoNachricht> neueListe = Arrays.asList(neueNachrichten);
-        for (InfoNachricht nachricht : new ArrayList<>(alteListe)) {
-            if (!neueListe.contains(nachricht)) {
-                alteListe.remove(nachricht);
+        if(neueNachrichten.length > 0) {
+            //gelöschte nachrichten aus der alten liste entfernen
+            List<InfoNachricht> neueListe = Arrays.asList(neueNachrichten);
+            for (InfoNachricht nachricht : new ArrayList<>(alteListe)) {
+                if (!neueListe.contains(nachricht)) {
+                    alteListe.remove(nachricht);
+                }
             }
-        }
-        alteNachrichten = alteListe.toArray(new InfoNachricht[alteNachrichtenListe.size()]);
-        if (!Arrays.deepEquals(neueNachrichten, alteNachrichten)) {
-            //checken, ob nachrichten nur gelöscht wurden
-
-            showNotificationNews();
+            alteNachrichten = alteListe.toArray(new InfoNachricht[alteNachrichtenListe.size()]);
+            if (!Arrays.deepEquals(neueNachrichten, alteNachrichten)) {
+                //checken, ob nachrichten nur gelöscht wurden
+                showNotificationNews();
+            }
         }
         APIClient.getUebersicht(getContext());
         APIClient.getLigaSpiele(APIClient.KREISPOKAL_JSON);

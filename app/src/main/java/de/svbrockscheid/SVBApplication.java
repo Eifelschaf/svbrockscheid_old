@@ -4,6 +4,8 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.crashlytics.android.Crashlytics;
+
+import de.svbrockscheid.model.FileModification;
 import io.fabric.sdk.android.Fabric;
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
@@ -43,6 +45,12 @@ public class SVBApplication extends Application {
                                 "typ TEXT" +
                                 ")"
                 );
+            }
+        });
+        sprinkles.addMigration(new Migration() {
+            @Override
+            protected void doMigration(SQLiteDatabase sqLiteDatabase) {
+                sqLiteDatabase.execSQL(FileModification.CREATE_TABLE);
             }
         });
     }

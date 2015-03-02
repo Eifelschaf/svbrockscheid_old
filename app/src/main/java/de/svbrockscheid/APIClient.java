@@ -7,12 +7,18 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.TimeUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -21,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -28,9 +36,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svbrockscheid.model.FileModification;
 import de.svbrockscheid.model.InfoNachricht;
 import de.svbrockscheid.model.LigaSpiel;
 import de.svbrockscheid.model.UpdateInfo;
+import se.emilsjolander.sprinkles.Query;
 
 /**
  * Created by Matthias on 01.10.2014.
@@ -89,32 +99,58 @@ public class APIClient {
 
     public static LigaSpiel[] getLigaSpiele(String fileName) {
         String fileContent = getFileContent("http://www.svbrockscheid.de/" + fileName);
-        LigaSpiel[] ligaSpiele = GSON.fromJson(fileContent, LigaSpiel[].class);
-        if (ligaSpiele != null) {
-            //ligaspiele speichern
-            for (LigaSpiel spiel : ligaSpiele) {
-                if (spiel != null) {
-                    spiel.setTyp(fileName);
-                    spiel.save();
+        if(fileContent != null && !fileContent.isEmpty()) {
+            LigaSpiel[] ligaSpiele = GSON.fromJson(fileContent, LigaSpiel[].class);
+            if (ligaSpiele != null) {
+                //ligaspiele speichern
+                for (LigaSpiel spiel : ligaSpiele) {
+                    if (spiel != null) {
+                        spiel.setTyp(fileName);
+                        spiel.save();
+                    }
                 }
             }
+            return ligaSpiele;
+        } else {
+            return new LigaSpiel[0];
         }
-        return ligaSpiele;
     }
 
     private static String getFileContent(String fileName) {
         try {
-//            HttpGet client = new HttpGet(fileName);
-//            client.addHeader("If-Modified-Since", "");
-            BufferedReader instream = new BufferedReader(new InputStreamReader(new URL(fileName).openConnection().getInputStream()));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = instream.readLine()) != null) {
-                builder.append(line);
+            HttpGet request = new HttpGet(fileName);
+            FileModification fileModification = Query.one(FileModification.class, "SELECT * FROM " + FileModification.TABLE_NAME + " WHERE " + FileModification.COLUMN_FILE_NAME + " = ?", fileName).get();
+            if(fileModification != null) {
+                request.addHeader("If-Modified-Since", fileModification.getModificationDate());
             }
-            instream.close();
-            //den stringbuilder parsen
-            return builder.toString();
+            try {
+                request.setURI(new URI(fileName));
+                HttpResponse response = new DefaultHttpClient().execute(request);
+                if(response.getStatusLine().getStatusCode() == 200) {
+                    //forward the content
+                    BufferedReader inStream = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                    StringBuilder builder = new StringBuilder();
+                    String line;
+                    while ((line = inStream.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    inStream.close();
+                    //das änderungsdatum speichern
+                    Header lastModifiedHeader = response.getFirstHeader("Last-Modified");
+                    if(lastModifiedHeader != null) {
+                        if (fileModification == null) {
+                            fileModification = new FileModification();
+                            fileModification.setFileName(fileName);
+                        }
+                        fileModification.setModificationDate(lastModifiedHeader.getValue());
+                        fileModification.save();
+                    }
+                    //den stringbuilder parsen
+                    return builder.toString();
+                }
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         } catch (FileNotFoundException e) {
             Log.e(TAG, "FileNotFoundException", e);
         } catch (IOException e) {
@@ -151,15 +187,20 @@ public class APIClient {
      * @return Alle Nachrichten, fertig geparsed.
      */
     public static InfoNachricht[] getNachrichten() {
-        List<InfoNachricht> infoNachrichten = Arrays.asList(GSON.fromJson(getFileContent(BuildDependentConstants.URL + "/nachrichten.json"), InfoNachricht[].class));
-        for (InfoNachricht nachricht : infoNachrichten) {
-            if (nachricht != null && !nachricht.isDelete()) {
-                nachricht.save();
-            } else if (nachricht != null) {
-                nachricht.delete();
+        String fileContent = getFileContent(BuildDependentConstants.URL + "/nachrichten.json");
+        if(fileContent != null && !fileContent.isEmpty()) {
+            List<InfoNachricht> infoNachrichten = Arrays.asList(GSON.fromJson(fileContent, InfoNachricht[].class));
+            for (InfoNachricht nachricht : infoNachrichten) {
+                if (nachricht != null && !nachricht.isDelete()) {
+                    nachricht.save();
+                } else if (nachricht != null) {
+                    nachricht.delete();
+                }
             }
+            return infoNachrichten.toArray(new InfoNachricht[infoNachrichten.size()]);
+        } else {
+            return new InfoNachricht[0];
         }
-        return infoNachrichten.toArray(new InfoNachricht[infoNachrichten.size()]);
     }
 
     public static boolean registerCGM(Activity activity) {
