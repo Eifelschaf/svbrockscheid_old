@@ -21,14 +21,25 @@
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/svtheme_color_icon_text"
+            android:textStyle="bold"
             tools:text="@string/update_verfuegbar" />
+
+        <TextView
+            android:id="@+id/changeLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nachricht"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/svtheme_color_icon_text"
+            tools:text="es hat sich was geändert\nund noch was" />
 
         <Button
             android:id="@+id/downloadButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/nachricht"
+            android:layout_below="@+id/changeLog"
             android:layout_marginTop="8dp"
             android:text="@string/download" />
     </RelativeLayout>

@@ -5,4 +5,5 @@ package de.svbrockscheid.model;
  */
 public class UpdateInfo {
     public String url = null;
+    public String changeLog = null;
 }

@@ -93,6 +93,7 @@ public class NachrichtenAdapter extends RecyclerView.Adapter<NachrichtenHolder> 
         if (position < 0) {
             //show the update information
             nachrichtenHolder.nachricht.setText(R.string.update_verfuegbar);
+            ((UpdateInfoHolder) nachrichtenHolder).changeLog.setText(updateInfo.changeLog);
             ((UpdateInfoHolder) nachrichtenHolder).downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
