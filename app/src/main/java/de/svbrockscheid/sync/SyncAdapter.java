@@ -14,7 +14,6 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.svbrockscheid.APIClient;
@@ -68,7 +67,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         CursorList<InfoNachricht> alteNachrichtenListe = Query.all(InfoNachricht.class).get();
-        InfoNachricht[] alteNachrichten;
         List<InfoNachricht> alteListe;
         try {
             alteListe = alteNachrichtenListe.asList();
@@ -77,17 +75,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
         InfoNachricht[] neueNachrichten = APIClient.getNachrichten();
         if(neueNachrichten.length > 0) {
-            //gelöschte nachrichten aus der alten liste entfernen
-            List<InfoNachricht> neueListe = Arrays.asList(neueNachrichten);
-            for (InfoNachricht nachricht : new ArrayList<>(alteListe)) {
-                if (!neueListe.contains(nachricht)) {
-                    alteListe.remove(nachricht);
+            List<InfoNachricht> news = new ArrayList<>();
+            //Benachrichtigung anzeigen
+            for (InfoNachricht neueNachricht : neueNachrichten) {
+                if (neueNachricht != null && !neueNachricht.isDelete() && (alteListe == null || !alteListe.contains(neueNachricht))) {
+                    news.add(neueNachricht);
                 }
             }
-            alteNachrichten = alteListe.toArray(new InfoNachricht[alteNachrichtenListe.size()]);
-            if (!Arrays.deepEquals(neueNachrichten, alteNachrichten)) {
-                //checken, ob nachrichten nur gelöscht wurden
-                showNotificationNews();
+            if (!news.isEmpty()) {
+                showNotificationNews(news);
             }
         }
 //        APIClient.getUebersicht(getContext());
@@ -96,7 +92,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         APIClient.getLigaSpiele(APIClient.KREISLIGA2_JSON);
     }
 
-    private void showNotificationNews() {
+    private void showNotificationNews(List<InfoNachricht> news) {
+        StringBuilder builder = new StringBuilder();
+        for (InfoNachricht nachricht : news) {
+            builder.append(nachricht.getNachricht()).append("\n\n");
+        }
+        //letzten Umbruch entfernen
+        String content = builder.substring(0, builder.length() - 2);
         NotificationManager mNotificationManager = (NotificationManager)
                 getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -105,13 +107,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0,
                 intent, 0);
 
+        NotificationCompat.BigTextStyle contentStyle = new NotificationCompat.BigTextStyle();
+        contentStyle.setBigContentTitle(getContext().getString(R.string.neuigkeiten));
+        contentStyle.bigText(content);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getContext())
                         .setSmallIcon(R.drawable.noticon)
                         .setContentTitle(getContext().getString(R.string.neuigkeiten))
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setVibrate(new long[]{300, 300, 300, 300})
-                        .setContentText(getContext().getString(R.string.neue_nachrichten));
+                        .setContentText(getContext().getString(R.string.neue_nachrichten))
+                        .setStyle(contentStyle);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID_NEUE_NACHRICHTEN, mBuilder.build());
