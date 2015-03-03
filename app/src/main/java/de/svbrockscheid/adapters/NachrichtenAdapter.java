@@ -53,7 +53,7 @@ public class NachrichtenAdapter extends RecyclerView.Adapter<NachrichtenHolder> 
         //alle nachrichten updaten
         disconnect();
         nachrichten = Query.all(InfoNachricht.class).get();
-
+        notifyDataSetChanged();
     }
 
     public void disconnect() {
