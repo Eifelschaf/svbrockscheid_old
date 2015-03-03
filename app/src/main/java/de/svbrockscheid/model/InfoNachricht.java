@@ -64,4 +64,8 @@ public class InfoNachricht extends Model {
         result = 31 * result + (zeit != null ? zeit.hashCode() : 0);
         return result;
     }
+
+    public long getId() {
+        return id;
+    }
 }

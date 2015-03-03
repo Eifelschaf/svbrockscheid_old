@@ -1,7 +1,6 @@
 package de.svbrockscheid.sync;
 
 import android.accounts.Account;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -12,6 +11,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,8 @@ import se.emilsjolander.sprinkles.Query;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    public static final int NOTIFICATION_ID_NEUE_NACHRICHTEN = 1;
+    public static final int NOTIFICATION_ID_NEUE_NACHRICHTEN = 16;
+    public static final String NACHRICHTEN_GROUP = "Nachrichten";
 
     // Global variables
     // Define a variable to contain a content resolver instance
@@ -93,23 +94,36 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void showNotificationNews(List<InfoNachricht> news) {
-        StringBuilder builder = new StringBuilder();
-        for (InfoNachricht nachricht : news) {
-            builder.append(nachricht.getNachricht()).append("\n\n");
-        }
-        //letzten Umbruch entfernen
-        String content = builder.substring(0, builder.length() - 2);
-        NotificationManager mNotificationManager = (NotificationManager)
-                getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
+        NotificationManagerCompat mNotificationManager = NotificationManagerCompat.from(getContext());
         Intent intent = new Intent(HomeScreenActivity.NEUE_NACHRICHTEN);
         intent.putExtra(HomeScreenActivity.NEUE_NACHRICHTEN, 1);
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0,
                 intent, 0);
 
+
+        StringBuilder builder = new StringBuilder();
+        for (InfoNachricht nachricht : news) {
+            builder.append(nachricht.getNachricht()).append("\n\n");
+            NotificationCompat.BigTextStyle contentStyle = new NotificationCompat.BigTextStyle();
+            contentStyle.setBigContentTitle(getContext().getString(R.string.neuigkeiten));
+            contentStyle.bigText(nachricht.getNachricht());
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(getContext())
+                            .setSmallIcon(R.drawable.noticon)
+                            .setContentTitle(getContext().getString(R.string.neuigkeiten))
+                            .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                            .setVibrate(new long[]{300, 300, 300, 300})
+                            .setContentText(getContext().getString(R.string.neue_nachrichten))
+                            .setGroup(NACHRICHTEN_GROUP)
+                            .setStyle(contentStyle);
+
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify((int) (NOTIFICATION_ID_NEUE_NACHRICHTEN + nachricht.getId()), mBuilder.build());
+        }
         NotificationCompat.BigTextStyle contentStyle = new NotificationCompat.BigTextStyle();
         contentStyle.setBigContentTitle(getContext().getString(R.string.neuigkeiten));
-        contentStyle.bigText(content);
+        contentStyle.bigText(builder.substring(0, builder.length() - 2));
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getContext())
@@ -118,6 +132,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setVibrate(new long[]{300, 300, 300, 300})
                         .setContentText(getContext().getString(R.string.neue_nachrichten))
+                        .setGroup(NACHRICHTEN_GROUP)
+                        .setGroupSummary(true)
                         .setStyle(contentStyle);
 
         mBuilder.setContentIntent(contentIntent);
