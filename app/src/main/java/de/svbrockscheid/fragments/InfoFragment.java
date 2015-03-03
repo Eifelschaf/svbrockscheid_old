@@ -5,9 +5,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +68,7 @@ public class InfoFragment extends Fragment {
         if (view != null) {
             //nachrichten laden
             RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
-            list.setLayoutManager(new GridLayoutManager(view.getContext(), getResources().getInteger(R.integer.column_count), LinearLayoutManager.VERTICAL, false));
+            list.setLayoutManager(new StaggeredGridLayoutManager(getResources().getInteger(R.integer.column_count), LinearLayoutManager.VERTICAL));
             list.setAdapter(getNachrichtenAdapter());
             checkForUpdate();
         }
