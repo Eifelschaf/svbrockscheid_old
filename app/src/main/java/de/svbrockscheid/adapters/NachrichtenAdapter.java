@@ -1,10 +1,7 @@
 package de.svbrockscheid.adapters;
 
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +14,6 @@ import de.svbrockscheid.model.InfoNachricht;
 import de.svbrockscheid.model.UpdateInfo;
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Query;
-import se.emilsjolander.sprinkles.SprinklesContentObserver;
 
 /**
  * Created by Matthias on 31.12.2014.
@@ -29,19 +25,10 @@ public class NachrichtenAdapter extends RecyclerView.Adapter<NachrichtenHolder> 
 
     private CursorList<InfoNachricht> nachrichten;
 
-    private SprinklesContentObserver observer = new SprinklesContentObserver(new ContentObserver(new Handler(Looper.getMainLooper())) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            refresh();
-        }
-    });
-
     public NachrichtenAdapter() {
         super();
         //alle Nachrichten aus der Datenbank abrufen
         refresh();
-        observer.register(InfoNachricht.class, false);
     }
 
     public void setUpdateInfo(UpdateInfo updateInfo) {
@@ -60,6 +47,7 @@ public class NachrichtenAdapter extends RecyclerView.Adapter<NachrichtenHolder> 
         //die DB-Verbindung schließen
         if (nachrichten != null) {
             nachrichten.close();
+            nachrichten = null;
         }
     }
 

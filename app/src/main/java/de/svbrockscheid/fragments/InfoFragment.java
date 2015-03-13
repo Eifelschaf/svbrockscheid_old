@@ -1,8 +1,11 @@
 package de.svbrockscheid.fragments;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ import de.svbrockscheid.R;
 import de.svbrockscheid.adapters.NachrichtenAdapter;
 import de.svbrockscheid.model.InfoNachricht;
 import de.svbrockscheid.model.UpdateInfo;
+import se.emilsjolander.sprinkles.SprinklesContentObserver;
 
 /**
  * A fragment representing a list of Items.
@@ -24,6 +28,20 @@ import de.svbrockscheid.model.UpdateInfo;
 public class InfoFragment extends Fragment {
 
     private NachrichtenAdapter nachrichtenAdapter;
+    private SprinklesContentObserver observer = new SprinklesContentObserver(new ContentObserver(new Handler(Looper.getMainLooper())) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            if (getView() != null) {
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        nachrichtenAdapter.refresh();
+                    }
+                });
+            }
+        }
+    });
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,6 +76,8 @@ public class InfoFragment extends Fragment {
 
     @Override
     public void onResume() {
+        //Änderungen anzeigen
+        observer.register(InfoNachricht.class, false);
         super.onResume();
         //menü richten
         MenuFragment menuFragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -72,6 +92,14 @@ public class InfoFragment extends Fragment {
             list.setAdapter(getNachrichtenAdapter());
             checkForUpdate();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        observer.unregister();
+        nachrichtenAdapter.disconnect();
+        nachrichtenAdapter = null;
     }
 
     private void reloadAll() {
