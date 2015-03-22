@@ -29,6 +29,22 @@ public class NachrichtenAdapter extends RecyclerView.Adapter<NachrichtenHolder> 
         super();
         //alle Nachrichten aus der Datenbank abrufen
         refresh();
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        switch (getItemViewType(position)) {
+            case 0:
+                return 0;
+            case 1:
+                InfoNachricht infoNachricht = nachrichten.get(position - (updateInfo != null ? 1 : 0));
+                if (infoNachricht != null) {
+                    return infoNachricht.getId();
+                }
+            default:
+                return -1;
+        }
     }
 
     public void setUpdateInfo(UpdateInfo updateInfo) {
