@@ -7,18 +7,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.TimeUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -27,8 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -43,7 +36,7 @@ import de.svbrockscheid.model.UpdateInfo;
 import se.emilsjolander.sprinkles.Query;
 
 /**
- * Created by Matthias on 01.10.2014.
+ * Diese Klasse bietet einen kompletten Zugriff auf die API
  */
 public class APIClient {
 
@@ -70,11 +63,11 @@ public class APIClient {
      * @return Alle Variablen, die in der Datei app.php gesetzt werden.
      */
     public static Map<String, String> getUebersicht(Context context) {
-        Map<String, String> returnValues = new HashMap<String, String>();
+        Map<String, String> returnValues = new HashMap<>();
         //falls mal mehr Dateien ausgelesen werden müssen
         for (String param : new String[]{BuildDependentConstants.URL + "/app.php"}) {
             String fileContent = getFileContent(param);
-            if (fileContent != null && !fileContent.isEmpty()) {
+            if (!fileContent.isEmpty()) {
                 //store the file locally
                 if (context != null) {
                     FileOutputStream cacheFile;
@@ -99,7 +92,7 @@ public class APIClient {
 
     public static LigaSpiel[] getLigaSpiele(String fileName) {
         String fileContent = getFileContent("http://www.svbrockscheid.de/" + fileName);
-        if(fileContent != null && !fileContent.isEmpty()) {
+        if (!fileContent.isEmpty()) {
             LigaSpiel[] ligaSpiele = GSON.fromJson(fileContent, LigaSpiel[].class);
             if (ligaSpiele != null) {
                 //ligaspiele speichern
@@ -118,38 +111,33 @@ public class APIClient {
 
     private static String getFileContent(String fileName) {
         try {
-            HttpGet request = new HttpGet(fileName);
+            HttpURLConnection request = (HttpURLConnection) new URL(fileName).openConnection();
             FileModification fileModification = Query.one(FileModification.class, "SELECT * FROM " + FileModification.TABLE_NAME + " WHERE " + FileModification.COLUMN_FILE_NAME + " = ?", fileName).get();
             if(fileModification != null) {
-                request.addHeader("If-Modified-Since", fileModification.getModificationDate());
+                request.setIfModifiedSince(fileModification.getModificationDate());
             }
-            try {
-                request.setURI(new URI(fileName));
-                HttpResponse response = new DefaultHttpClient().execute(request);
-                if(response.getStatusLine().getStatusCode() == 200) {
-                    //forward the content
-                    BufferedReader inStream = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                    StringBuilder builder = new StringBuilder();
-                    String line;
-                    while ((line = inStream.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    inStream.close();
-                    //das änderungsdatum speichern
-                    Header lastModifiedHeader = response.getFirstHeader("Last-Modified");
-                    if(lastModifiedHeader != null) {
-                        if (fileModification == null) {
-                            fileModification = new FileModification();
-                            fileModification.setFileName(fileName);
-                        }
-                        fileModification.setModificationDate(lastModifiedHeader.getValue());
-                        fileModification.save();
-                    }
-                    //den stringbuilder parsen
-                    return builder.toString();
+            request.setDoOutput(true);
+            if (request.getResponseCode() == 200) {
+                //forward the content
+                BufferedReader inStream = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = inStream.readLine()) != null) {
+                    builder.append(line);
                 }
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+                inStream.close();
+                //das änderungsdatum speichern
+                long lastModified = request.getLastModified();
+                if (lastModified > 0) {
+                    if (fileModification == null) {
+                        fileModification = new FileModification();
+                        fileModification.setFileName(fileName);
+                    }
+                    fileModification.setModificationDate(lastModified);
+                    fileModification.save();
+                }
+                //den stringbuilder parsen
+                return builder.toString();
             }
         } catch (FileNotFoundException e) {
             Log.e(TAG, "FileNotFoundException", e);
@@ -188,7 +176,7 @@ public class APIClient {
      */
     public static InfoNachricht[] getNachrichten() {
         String fileContent = getFileContent(BuildDependentConstants.URL + "/nachrichten.json");
-        if(fileContent != null && !fileContent.isEmpty()) {
+        if (!fileContent.isEmpty()) {
             List<InfoNachricht> infoNachrichten = Arrays.asList(GSON.fromJson(fileContent, InfoNachricht[].class));
             for (InfoNachricht nachricht : infoNachrichten) {
                 if (nachricht != null && !nachricht.isDelete()) {
@@ -272,7 +260,7 @@ public class APIClient {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -367,7 +355,7 @@ public class APIClient {
         //auf update prüfen
         try {
             String fileContent = getFileContent(BuildDependentConstants.URL + "/updateCheck.php?version=" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
-            if (fileContent != null && !fileContent.isEmpty()) {
+            if (!fileContent.isEmpty()) {
                 return GSON.fromJson(fileContent, UpdateInfo.class);
             }
         } catch (PackageManager.NameNotFoundException e) {
