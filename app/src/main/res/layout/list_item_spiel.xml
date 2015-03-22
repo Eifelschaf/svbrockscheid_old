@@ -11,11 +11,15 @@
         android:id="@+id/datum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/ergebnis"
+        android:layout_toStartOf="@+id/ergebnis"
+        android:gravity="start"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffc0c0c0"
+        android:textColor="?android:attr/textColorSecondary"
         tools:text="Small Text" />
 
     <TextView
@@ -25,10 +29,12 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/ergebnis"
         android:layout_toRightOf="@+id/ergebnis"
-        android:gravity="right"
+        android:gravity="end"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffc0c0c0"
+        android:textColor="?android:attr/textColorSecondary"
         tools:text="Small Text" />
 
     <TextView
@@ -38,9 +44,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/datum"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/ergebnis"
         android:layout_toStartOf="@+id/ergebnis"
+        android:gravity="start"
         android:textAppearance="?android:attr/textAppearanceMedium"
         tools:text="Medium Text" />
 
@@ -52,7 +60,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#ffffffff"
+        android:textColor="@color/svtheme_color_icon_text"
         android:textIsSelectable="true"
         android:textSize="25sp"
         tools:text="Medium Text" />
@@ -65,6 +73,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/paar1"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/ergebnis"
         android:layout_toRightOf="@+id/ergebnis"
         android:gravity="end"

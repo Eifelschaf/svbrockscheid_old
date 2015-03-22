@@ -2,11 +2,12 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:auto="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:orientation="vertical"
-    auto:cardBackgroundColor="@color/cardBackground">
+    auto:cardBackgroundColor="@color/menuBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +18,8 @@
             android:id="@+id/nachricht"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="Nachrichten! YAY!!!" />
 
         <TextView
             android:id="@+id/zeit"
@@ -25,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/nachricht"
             android:layout_marginTop="8dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="02.04.2015 18:00" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

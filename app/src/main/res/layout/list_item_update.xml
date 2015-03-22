@@ -41,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/changeLog"
             android:layout_marginTop="8dp"
-            android:text="@string/download" />
+            android:text="@string/download"
+            android:textColor="@color/svtheme_color_icon_text" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

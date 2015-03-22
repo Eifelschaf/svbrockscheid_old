@@ -9,4 +9,26 @@
         <item name="colorAccent">@color/svtheme_color_accent</item>
     </style>
 
+    <style name="SVTheme.Hell" parent="SVTheme">
+        <item name="android:colorBackground">@color/menuBackgroundPressed</item>
+        <item name="android:textColorPrimary">?attr/colorPrimaryDark</item>
+        <item name="android:textColorSecondary">?attr/colorPrimary</item>
+        <item name="toolbarStyle">@style/InverseToolBar</item>
+    </style>
+
+    <style name="InverseToolBar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/InverseTitle</item>
+        <item name="subtitleTextAppearance">@style/InverseSubTitle</item>
+    </style>
+
+    <style name="InverseTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/svtheme_color_icon_text</item>
+        <item name="android:textColorSecondary">@color/svtheme_color_icon_text</item>
+    </style>
+
+    <style name="InverseSubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/svtheme_color_icon_text</item>
+        <item name="android:textColorSecondary">@color/svtheme_color_icon_text</item>
+    </style>
+
 </resources>
